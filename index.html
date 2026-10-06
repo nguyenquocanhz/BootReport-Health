@@ -956,7 +956,7 @@
       </div>
 
       <div class="navbar__right">
-        <a href="https://github.com" target="_blank" class="btn-github">
+        <a href="https://github.com/nguyenquocanhz/BootReport-Health" target="_blank" class="btn-github">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
           GitHub
         </a>
@@ -1041,8 +1041,8 @@
                 <span>One-line launcher</span>
               </div>
               <div class="launcher-code">
-                <code><span class="cmd-prefix">PS&gt;</span>irm https://get.bootreport.dev | iex</code>
-                <button class="btn-copy" onclick="copyCommand('irm https://get.bootreport.dev | iex', this)">
+                <code><span class="cmd-prefix">PS&gt;</span>irm https://raw.githubusercontent.com/nguyenquocanhz/BootReport-Health/main/BootReport.ps1 | iex</code>
+                <button class="btn-copy" onclick="copyCommand('irm https://raw.githubusercontent.com/nguyenquocanhz/BootReport-Health/main/BootReport.ps1 | iex', this)">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                   <span>Copy</span>
                 </button>
@@ -1062,8 +1062,8 @@
               <ol>
                 <li>Download the script:
                   <ul>
-                    <li><a href="./BootReport.ps1" download><strong>BootReport.ps1</strong></a> (Direct PowerShell script)</li>
-                    <li><a href="#" download><strong>BootReport.zip</strong></a> (Full package archive)</li>
+                    <li><a href="https://raw.githubusercontent.com/nguyenquocanhz/BootReport-Health/main/BootReport.ps1" target="_blank" download><strong>BootReport.ps1</strong></a> (Direct PowerShell script)</li>
+                    <li><a href="https://github.com/nguyenquocanhz/BootReport-Health/archive/refs/heads/main.zip" download><strong>BootReport.zip</strong></a> (Full package archive)</li>
                   </ul>
                 </li>
                 <li>Right-click the Start Menu &gt; Select <strong>Windows Terminal (Admin)</strong> or <strong>PowerShell (Run as Administrator)</strong>.</li>
@@ -1099,8 +1099,8 @@
           <p><strong>If the command is blocked:</strong><br>
           Some ISPs block newly registered domains. Use this command to bypass DNS blocks (Windows 10/11 only):</p>
           <div class="inline-code-box">
-            <code>iex (curl.exe -s --doh-url https://1.1.1.1/dns-query https://get.bootreport.dev | Out-String)</code>
-            <button class="mini-copy-btn" onclick="copyCommand('iex (curl.exe -s --doh-url https://1.1.1.1/dns-query https://get.bootreport.dev | Out-String)', this)" title="Copy bypass command">
+            <code>iex (curl.exe -s --doh-url https://1.1.1.1/dns-query https://raw.githubusercontent.com/nguyenquocanhz/BootReport-Health/main/BootReport.ps1 | Out-String)</code>
+            <button class="mini-copy-btn" onclick="copyCommand('iex (curl.exe -s --doh-url https://1.1.1.1/dns-query https://raw.githubusercontent.com/nguyenquocanhz/BootReport-Health/main/BootReport.ps1 | Out-String)', this)" title="Copy bypass command">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
             </button>
           </div>
@@ -1117,8 +1117,8 @@
           <p><strong>Bypass ExecutionPolicy restriction:</strong><br>
           If PowerShell restricts running unsigned scripts on your machine:</p>
           <div class="inline-code-box">
-            <code>powershell -ExecutionPolicy Bypass -Command "irm https://get.bootreport.dev | iex"</code>
-            <button class="mini-copy-btn" onclick="copyCommand('powershell -ExecutionPolicy Bypass -Command &quot;irm https://get.bootreport.dev | iex&quot;', this)" title="Copy bypass command">
+            <code>powershell -ExecutionPolicy Bypass -Command "irm https://raw.githubusercontent.com/nguyenquocanhz/BootReport-Health/main/BootReport.ps1 | iex"</code>
+            <button class="mini-copy-btn" onclick="copyCommand('powershell -ExecutionPolicy Bypass -Command &quot;irm https://raw.githubusercontent.com/nguyenquocanhz/BootReport-Health/main/BootReport.ps1 | iex&quot;', this)" title="Copy bypass command">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
             </button>
           </div>
@@ -1320,7 +1320,7 @@
           </button>
         </div>
         <div class="screenshot-body" id="terminalOutput">
-          <div class="log-line show"><span class="log-cyan">PS C:\WINDOWS\system32&gt;</span> irm https://get.bootreport.dev | iex<span class="cursor-blink" id="termCursor"></span></div>
+          <div class="log-line show"><span class="log-cyan">PS C:\WINDOWS\system32&gt;</span> irm https://raw.githubusercontent.com/nguyenquocanhz/BootReport-Health/main/BootReport.ps1 | iex<span class="cursor-blink" id="termCursor"></span></div>
           <div class="log-line show log-muted mt-2">[i] Dang thu thap thong tin pin, o dia, RAM, su kien he thong...</div>
           <div class="log-line show">[+] Da quet thanh cong 18 lan khoi dong trong 60 ngay qua</div>
           <div class="log-line show">[+] Boot Time TB: <span class="log-green">14.8 giay</span> (BIOS: 3.2s, Kernel: 2.1s, Drivers: 4.5s)</div>
@@ -1345,8 +1345,8 @@
         <li><strong>Offline-Ready:</strong> Report output is self-contained with inline CSS and lightweight SVG charts that open directly in any browser.</li>
       </ul>
       <p>
-        <a href="https://github.com" target="_blank">GitHub Repository</a> &nbsp;•&nbsp; 
-        <a href="./BootReport.ps1" download>Direct BootReport.ps1 Script</a> &nbsp;•&nbsp; 
+        <a href="https://github.com/nguyenquocanhz/BootReport-Health" target="_blank">GitHub Repository</a> &nbsp;•&nbsp; 
+        <a href="https://raw.githubusercontent.com/nguyenquocanhz/BootReport-Health/main/BootReport.ps1" target="_blank" download>Direct BootReport.ps1 Script</a> &nbsp;•&nbsp; 
         <a href="#launch-methods">PowerShell One-Liner</a>
       </p>
 
@@ -1466,7 +1466,7 @@
       const terminal = document.getElementById('terminalOutput');
       terminal.innerHTML = `<div><span class="log-cyan">PS C:\\WINDOWS\\system32&gt;</span> <span id="simTyping"></span><span class="cursor-blink"></span></div>`;
 
-      const cmdText = 'irm https://get.bootreport.dev | iex';
+      const cmdText = 'irm https://raw.githubusercontent.com/nguyenquocanhz/BootReport-Health/main/BootReport.ps1 | iex';
       const simTyping = document.getElementById('simTyping');
 
       for (let i = 0; i < cmdText.length; i++) {
