@@ -1,0 +1,1669 @@
+<!doctype html>
+<html lang="en" dir="ltr" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Windows Boot & System Health Report | BootReport</title>
+  <meta name="description" content="An open-source Windows hardware and boot diagnostic tool featuring Boot Performance, Battery Health, SSD/NVMe SMART, and System Crash analysis, along with advanced troubleshooting.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ifm-color-primary: #25c2a0;
+      --ifm-color-primary-dark: #21af90;
+      --ifm-color-primary-darker: #1fa588;
+      --ifm-color-primary-darkest: #1a8870;
+      --ifm-color-primary-light: #29d5b0;
+      --ifm-color-primary-lighter: #32d8b4;
+      --ifm-color-primary-lightest: #4fddbf;
+      --ifm-background-color: #1b1b1d;
+      --ifm-background-surface-color: #242526;
+      --ifm-navbar-background-color: #1b1b1d;
+      --ifm-navbar-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+      --ifm-color-content: #f5f6f7;
+      --ifm-color-content-secondary: #9fa1a5;
+      --ifm-border-color: #30363d;
+      --ifm-code-background: #141416;
+      --ifm-menu-color: #9fa1a5;
+      --ifm-menu-color-active: var(--ifm-color-primary);
+      --ifm-menu-color-background-active: rgba(37, 194, 160, 0.14);
+      --ifm-table-border-color: #30363d;
+      --ifm-table-stripe-background: #202022;
+      --ifm-font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --ifm-font-family-monospace: 'JetBrains Mono', Menlo, Monaco, Consolas, monospace;
+      --glow-x: 50%;
+      --glow-y: 50%;
+    }
+
+    [data-theme="light"] {
+      --ifm-color-primary: #00875a;
+      --ifm-color-primary-dark: #007a51;
+      --ifm-color-primary-darker: #00734d;
+      --ifm-color-primary-darkest: #005f3f;
+      --ifm-color-primary-light: #009463;
+      --ifm-color-primary-lighter: #009b68;
+      --ifm-color-primary-lightest: #00af75;
+      --ifm-background-color: #ffffff;
+      --ifm-background-surface-color: #f6f8fa;
+      --ifm-navbar-background-color: #ffffff;
+      --ifm-navbar-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+      --ifm-color-content: #1c1e21;
+      --ifm-color-content-secondary: #525860;
+      --ifm-border-color: #ebedf0;
+      --ifm-code-background: #f6f8fa;
+      --ifm-menu-color: #525860;
+      --ifm-menu-color-active: var(--ifm-color-primary);
+      --ifm-menu-color-background-active: rgba(0, 135, 90, 0.1);
+      --ifm-table-border-color: #ebedf0;
+      --ifm-table-stripe-background: #fbfcfd;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 80px;
+    }
+
+    [id] {
+      scroll-margin-top: 80px;
+    }
+
+    /* Rule-compliant select options for Dark Mode */
+    select.form-control option, select option {
+      background-color: var(--ifm-background-surface-color);
+      color: var(--ifm-color-content);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--ifm-font-family-base);
+      background-color: var(--ifm-background-color);
+      color: var(--ifm-color-content);
+      line-height: 1.65;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      transition: background-color 0.25s ease, color 0.25s ease;
+    }
+
+    a {
+      color: var(--ifm-color-primary);
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* Fixed Navbar */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background-color: var(--ifm-navbar-background-color);
+      border-bottom: 1px solid var(--ifm-border-color);
+      box-shadow: var(--ifm-navbar-shadow);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      padding: 0 1.5rem;
+      transition: background-color 0.25s ease, border-color 0.25s ease;
+    }
+    .navbar__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .navbar__left, .navbar__right {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+    .navbar__brand {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 700;
+      font-size: 1.15rem;
+      color: var(--ifm-color-content);
+      margin-right: 0.5rem;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .navbar__brand:hover {
+      text-decoration: none;
+      transform: scale(1.03);
+    }
+    .navbar__logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--ifm-color-primary), #059669);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: -0.5px;
+      box-shadow: 0 2px 8px rgba(37, 194, 160, 0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .navbar__brand:hover .navbar__logo {
+      transform: rotate(-6deg) scale(1.05);
+      box-shadow: 0 4px 14px rgba(37, 194, 160, 0.45);
+    }
+    .navbar__link {
+      font-size: 0.925rem;
+      font-weight: 500;
+      color: var(--ifm-color-content-secondary);
+      padding: 0.4rem 0.2rem;
+      position: relative;
+    }
+    .navbar__link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: var(--ifm-color-primary);
+      transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .navbar__link:hover::after, .navbar__link--active::after {
+      width: 100%;
+    }
+    .navbar__link:hover, .navbar__link--active {
+      color: var(--ifm-color-primary);
+      text-decoration: none;
+    }
+
+    /* Buttons */
+    .btn-github {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+      border: 1px solid var(--ifm-border-color);
+      color: var(--ifm-color-content);
+      background: var(--ifm-background-surface-color);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn-github:hover {
+      text-decoration: none;
+      border-color: var(--ifm-color-primary);
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    }
+    .theme-toggle-btn {
+      background: none;
+      border: none;
+      color: var(--ifm-color-content-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px;
+      border-radius: 6px;
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .theme-toggle-btn:hover {
+      background: var(--ifm-background-surface-color);
+      color: var(--ifm-color-content);
+      transform: rotate(20deg) scale(1.1);
+    }
+
+    /* App Layout */
+    .docs-wrapper {
+      display: flex;
+      max-width: 1400px;
+      margin: 60px auto 0;
+      min-height: calc(100vh - 60px);
+    }
+
+    /* Left Sidebar */
+    .docs-sidebar {
+      width: 290px;
+      flex-shrink: 0;
+      border-right: 1px solid var(--ifm-border-color);
+      padding: 1.5rem 1rem 3rem;
+      position: sticky;
+      top: 60px;
+      height: calc(100vh - 60px);
+      overflow-y: auto;
+      transition: border-color 0.25s ease;
+    }
+    .sidebar-menu {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .sidebar-menu li a {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.45rem 0.85rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      color: var(--ifm-menu-color);
+      font-weight: 500;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+    .sidebar-menu li a:hover {
+      background: var(--ifm-background-surface-color);
+      color: var(--ifm-color-content);
+      text-decoration: none;
+    }
+    .sidebar-menu li a.active {
+      color: var(--ifm-color-primary) !important;
+      background: var(--ifm-menu-color-background-active) !important;
+      font-weight: 600 !important;
+    }
+    .sidebar-hr {
+      border: none;
+      border-top: 1px solid var(--ifm-border-color);
+      margin: 0.8rem 0;
+    }
+    .sidebar-heading {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ifm-color-content-secondary);
+      padding: 0.6rem 0.85rem 0.2rem;
+    }
+
+    /* Main Content */
+    .docs-content {
+      flex: 1;
+      padding: 2.25rem 3rem 5rem;
+      min-width: 0;
+      max-width: 900px;
+      animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Breadcrumbs */
+    .breadcrumbs {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      list-style: none;
+      font-size: 0.85rem;
+      color: var(--ifm-color-content-secondary);
+      margin-bottom: 1.5rem;
+    }
+    .breadcrumbs a {
+      color: var(--ifm-color-content-secondary);
+    }
+    .breadcrumbs a:hover {
+      color: var(--ifm-color-primary);
+    }
+    .breadcrumbs .active {
+      color: var(--ifm-color-content);
+      font-weight: 500;
+    }
+
+    /* Typography */
+    h1 {
+      font-size: 2.35rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+      line-height: 1.25;
+      color: var(--ifm-color-content);
+    }
+    .subtitle {
+      font-size: 1.05rem;
+      color: var(--ifm-color-content-secondary);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid var(--ifm-border-color);
+      margin: 2rem 0;
+    }
+    h2 {
+      font-size: 1.65rem;
+      font-weight: 700;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.01em;
+    }
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-top: 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+    p, ol, ul {
+      margin-bottom: 1rem;
+    }
+    ol, ul {
+      padding-left: 1.5rem;
+    }
+    li {
+      margin-bottom: 0.4rem;
+    }
+
+    /* Animated Tabs */
+    .tabs-container {
+      margin: 1.25rem 0 1.75rem;
+    }
+    .tabs-wrapper {
+      position: relative;
+      border-bottom: 1px solid var(--ifm-border-color);
+    }
+    .tabs {
+      display: flex;
+      list-style: none;
+      padding: 0;
+      gap: 0.5rem;
+    }
+    .tabs__item {
+      padding: 0.65rem 1.15rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--ifm-color-content-secondary);
+      cursor: pointer;
+      user-select: none;
+      transition: color 0.2s ease;
+      position: relative;
+    }
+    .tabs__item:hover {
+      color: var(--ifm-color-content);
+    }
+    .tabs__item--active {
+      color: var(--ifm-color-primary);
+    }
+    .tab-indicator {
+      position: absolute;
+      bottom: -1px;
+      height: 3px;
+      background-color: var(--ifm-color-primary);
+      border-radius: 3px 3px 0 0;
+      transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .tab-content {
+      padding-top: 1.25rem;
+      position: relative;
+    }
+    .tab-panel {
+      display: none;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+    .tab-panel.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Spotlight Launcher Box */
+    .launcher-command {
+      position: relative;
+      margin: 1.25rem 0 1.5rem;
+      background: var(--ifm-code-background);
+      border: 1px solid var(--ifm-border-color);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+    .launcher-command::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(400px circle at var(--glow-x, 50%) var(--glow-y, 50%), rgba(37, 194, 160, 0.15), transparent 60%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 1;
+    }
+    .launcher-command:hover {
+      border-color: rgba(37, 194, 160, 0.4);
+      box-shadow: 0 6px 24px rgba(37, 194, 160, 0.12);
+    }
+    .launcher-command:hover::before {
+      opacity: 1;
+    }
+
+    .launcher-header {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.55rem 1.15rem;
+      background: rgba(255, 255, 255, 0.025);
+      border-bottom: 1px solid var(--ifm-border-color);
+      font-family: var(--ifm-font-family-monospace);
+      font-size: 0.8rem;
+      color: var(--ifm-color-content-secondary);
+    }
+    .terminal-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background-color: var(--ifm-color-primary);
+      box-shadow: 0 0 0 rgba(37, 194, 160, 0.6);
+      animation: pulseGlow 2s infinite;
+    }
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 0 0 rgba(37, 194, 160, 0.7); }
+      70% { box-shadow: 0 0 0 6px rgba(37, 194, 160, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(37, 194, 160, 0); }
+    }
+
+    .launcher-code {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.15rem 1.25rem;
+      font-family: var(--ifm-font-family-monospace);
+      font-size: 1.05rem;
+      overflow-x: auto;
+    }
+    .launcher-code code {
+      color: #38bdf8;
+      font-weight: 500;
+      white-space: nowrap;
+      user-select: all;
+    }
+    .launcher-code code .cmd-prefix {
+      color: #10b981;
+      margin-right: 0.5rem;
+      user-select: none;
+    }
+
+    .btn-copy {
+      position: relative;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--ifm-border-color);
+      color: var(--ifm-color-content);
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.45rem 0.95rem;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      font-family: var(--ifm-font-family-base);
+      flex-shrink: 0;
+      margin-left: 1rem;
+      outline: none;
+    }
+    .btn-copy:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: var(--ifm-color-primary);
+      transform: translateY(-1px) scale(1.02);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    .btn-copy.copied {
+      background: rgba(37, 194, 160, 0.2);
+      color: var(--ifm-color-primary);
+      border-color: var(--ifm-color-primary);
+      animation: copyPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes copyPop {
+      0% { transform: scale(0.95); }
+      50% { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
+
+    /* Toast */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      pointer-events: none;
+    }
+    .toast-message {
+      background: #18191a;
+      color: #fff;
+      border: 1px solid var(--ifm-color-primary);
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+      transform: translateY(20px) scale(0.95);
+      opacity: 0;
+      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .toast-message.show {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+    .toast-icon {
+      color: var(--ifm-color-primary);
+    }
+
+    /* Details Accordion */
+    details.details-box {
+      background: var(--ifm-background-surface-color);
+      border: 1px solid var(--ifm-border-color);
+      border-radius: 8px;
+      padding: 0.9rem 1.15rem;
+      margin: 1.25rem 0;
+      font-size: 0.925rem;
+      transition: border-color 0.2s ease;
+    }
+    details.details-box:hover {
+      border-color: rgba(37, 194, 160, 0.4);
+    }
+    details.details-box summary {
+      cursor: pointer;
+      font-weight: 600;
+      user-select: none;
+      outline: none;
+      color: var(--ifm-color-content);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    details.details-box summary:hover {
+      color: var(--ifm-color-primary);
+    }
+    details.details-box summary::-webkit-details-marker {
+      display: none;
+    }
+    .summary-chevron {
+      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    details[open] .summary-chevron {
+      transform: rotate(180deg);
+    }
+    details.details-box .details-content {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--ifm-border-color);
+      animation: slideDown 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .inline-code-box {
+      background: var(--ifm-code-background);
+      border: 1px solid var(--ifm-border-color);
+      padding: 0.65rem 0.9rem;
+      border-radius: 6px;
+      font-family: var(--ifm-font-family-monospace);
+      font-size: 0.85rem;
+      margin: 0.5rem 0 1rem;
+      overflow-x: auto;
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .mini-copy-btn {
+      background: none;
+      border: none;
+      color: var(--ifm-color-content-secondary);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+      transition: color 0.15s, background 0.15s;
+    }
+    .mini-copy-btn:hover {
+      color: var(--ifm-color-primary);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    /* Admonitions */
+    .admonition {
+      border-radius: 8px;
+      border-left: 5px solid;
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+      transition: transform 0.2s ease;
+    }
+    .admonition:hover {
+      transform: translateX(3px);
+    }
+    .admonition-tip {
+      background-color: rgba(37, 194, 160, 0.08);
+      border-color: var(--ifm-color-primary);
+    }
+    .admonition-note {
+      background-color: rgba(160, 160, 160, 0.08);
+      border-color: #6b7280;
+    }
+    .admonition-title {
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .admonition-tip .admonition-title { color: var(--ifm-color-primary); }
+    .admonition-note .admonition-title { color: var(--ifm-color-content-secondary); }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.925rem;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    th, td {
+      border: 1px solid var(--ifm-table-border-color);
+      padding: 0.75rem 1rem;
+      text-align: left;
+      transition: background-color 0.15s ease;
+    }
+    th {
+      background-color: var(--ifm-background-surface-color);
+      font-weight: 600;
+    }
+    tr:nth-child(even) {
+      background-color: var(--ifm-table-stripe-background);
+    }
+    tbody tr:hover {
+      background-color: rgba(37, 194, 160, 0.05);
+    }
+
+    /* Terminal Simulator */
+    .screenshot-window {
+      background: #141416;
+      border: 1px solid var(--ifm-border-color);
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 1.5rem 0;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+    .screenshot-window:hover {
+      border-color: rgba(37, 194, 160, 0.4);
+      box-shadow: 0 12px 36px rgba(37, 194, 160, 0.1);
+    }
+    .screenshot-titlebar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.65rem 1rem;
+      background: #1e1e22;
+      border-bottom: 1px solid #2d2d34;
+      font-size: 0.8rem;
+      font-family: var(--ifm-font-family-monospace);
+      color: #9fa1a5;
+    }
+    .window-dots {
+      display: flex;
+      gap: 6px;
+    }
+    .dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+    .dot:hover {
+      transform: scale(1.2);
+    }
+    .dot-red { background: #ef4444; }
+    .dot-yellow { background: #f59e0b; }
+    .dot-green { background: #10b981; }
+
+    .btn-simulate {
+      background: rgba(37, 194, 160, 0.15);
+      border: 1px solid rgba(37, 194, 160, 0.4);
+      color: var(--ifm-color-primary);
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s ease;
+    }
+    .btn-simulate:hover {
+      background: var(--ifm-color-primary);
+      color: #141416;
+      transform: scale(1.04);
+    }
+
+    .screenshot-body {
+      padding: 1.25rem 1.5rem;
+      font-family: var(--ifm-font-family-monospace);
+      font-size: 0.875rem;
+      line-height: 1.7;
+      color: #e5e7eb;
+      min-height: 220px;
+    }
+    .log-line {
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .log-line.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .log-cyan { color: #38bdf8; }
+    .log-green { color: #4ade80; font-weight: 600; }
+    .log-yellow { color: #fbbf24; }
+    .log-muted { color: #9ca3af; }
+    .cursor-blink {
+      display: inline-block;
+      width: 8px;
+      height: 15px;
+      background: var(--ifm-color-primary);
+      margin-left: 4px;
+      vertical-align: middle;
+      animation: blink 0.9s infinite;
+    }
+    @keyframes blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+
+    /* Right TOC */
+    .docs-toc {
+      width: 240px;
+      flex-shrink: 0;
+      padding: 2.25rem 1rem;
+      position: sticky;
+      top: 60px;
+      height: calc(100vh - 60px);
+      overflow-y: auto;
+    }
+    .toc-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ifm-color-content-secondary);
+      margin-bottom: 0.75rem;
+    }
+    .toc-list {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      font-size: 0.85rem;
+    }
+    .toc-list a {
+      color: var(--ifm-color-content-secondary);
+      padding: 4px 8px;
+      border-radius: 5px;
+      transition: background-color 0.15s ease, color 0.15s ease;
+      display: block;
+    }
+    .toc-list a:hover {
+      color: var(--ifm-color-primary);
+      background: var(--ifm-background-surface-color);
+      text-decoration: none;
+    }
+    .toc-list a.active {
+      color: var(--ifm-color-primary) !important;
+      background: var(--ifm-menu-color-background-active) !important;
+      font-weight: 600 !important;
+      text-decoration: none;
+    }
+    .toc-heading {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ifm-color-content-secondary);
+      padding: 0.5rem 0.5rem 0.1rem;
+      list-style: none;
+    }
+
+    /* Diagnostic Module Cards */
+    .module-card {
+      background: var(--ifm-background-surface-color);
+      border: 1px solid var(--ifm-border-color);
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.25rem 0;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .module-card:hover {
+      border-color: rgba(37, 194, 160, 0.4);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    }
+    .module-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+    .module-title-group {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+    .module-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      background: var(--ifm-menu-color-background-active);
+      color: var(--ifm-color-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .module-title-group h3 {
+      margin: 0;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--ifm-color-content);
+    }
+    .module-badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      font-family: var(--ifm-font-family-monospace);
+      background: var(--ifm-code-background);
+      color: var(--ifm-color-primary);
+      border: 1px solid var(--ifm-border-color);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .metric-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 0.75rem 0;
+    }
+    .metric-tags .tag {
+      font-size: 0.78rem;
+      font-family: var(--ifm-font-family-monospace);
+      background: var(--ifm-code-background);
+      border: 1px solid var(--ifm-border-color);
+      padding: 2px 8px;
+      border-radius: 4px;
+      color: var(--ifm-color-content-secondary);
+    }
+    .module-desc {
+      font-size: 0.92rem;
+      color: var(--ifm-color-content-secondary);
+      line-height: 1.55;
+      margin-top: 0.5rem;
+      margin-bottom: 0;
+    }
+
+    @media (max-width: 996px) {
+      .docs-sidebar, .docs-toc { display: none; }
+      .docs-content { padding: 1.5rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP NAVIGATION BAR -->
+  <nav class="navbar" aria-label="Main">
+    <div class="navbar__inner">
+      <div class="navbar__left">
+        <a class="navbar__brand" href="#check-health">
+          <div class="navbar__logo">BR</div>
+          <span>BootReport</span>
+        </a>
+        <a class="navbar__link navbar__link--active" href="#check-health">Home</a>
+        <a class="navbar__link" href="#offline">Download Script</a>
+        <a class="navbar__link" href="#diagnostics-summary">Metrics</a>
+        <a class="navbar__link" href="#troubleshoot">Troubleshoot</a>
+      </div>
+
+      <div class="navbar__right">
+        <a href="https://github.com" target="_blank" class="btn-github">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          GitHub
+        </a>
+        <button class="theme-toggle-btn" id="themeToggleBtn" title="Switch between dark and light mode">
+          <svg id="themeIconSun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          <svg id="themeIconMoon" style="display:none;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- APP WRAPPER -->
+  <div class="docs-wrapper">
+    <!-- LEFT SIDEBAR WITH SYNCHRONIZED SCROLL-SPY -->
+    <aside class="docs-sidebar">
+      <ul class="sidebar-menu">
+        <li><a href="#check-health" id="sb-check-health" class="active"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Check Windows Health</a></li>
+        <li><a href="#offline" id="sb-offline"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download Script (.ps1)</a></li>
+        <li><a href="#troubleshoot" id="sb-troubleshoot"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Troubleshoot</a></li>
+
+        <li class="sidebar-hr"></li>
+
+        <li class="sidebar-heading">Diagnostic Modules</li>
+        <li><a href="#boot-time" id="sb-boot-time"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Boot Time Analysis</a></li>
+        <li><a href="#battery-health" id="sb-battery-health"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="16" height="10" rx="2" ry="2"/><line x1="21" y1="11" x2="21" y2="13"/></svg> Battery &amp; Cycles</a></li>
+        <li><a href="#ssd-smart" id="sb-ssd-smart"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="12" x2="2" y2="12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg> SSD / NVMe SMART</a></li>
+        <li><a href="#system-crashes" id="sb-system-crashes"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg> Crash &amp; Kernel Events</a></li>
+
+        <li class="sidebar-hr"></li>
+
+        <li class="sidebar-heading">Overview &amp; Tools</li>
+        <li><a href="#diagnostics-summary" id="sb-summary"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg> Summary Table</a></li>
+        <li><a href="#terminal-preview" id="sb-terminal"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg> Terminal Simulator</a></li>
+        <li><a href="#latest-release" id="sb-release"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> Latest Release &amp; Notes</a></li>
+      </ul>
+    </aside>
+
+    <!-- MAIN ARTICLE CONTENT -->
+    <main class="docs-content">
+      <!-- Breadcrumbs -->
+      <ul class="breadcrumbs">
+        <li><a href="#check-health"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></a></li>
+        <li>/</li>
+        <li class="active">Windows Boot & System Health Report</li>
+      </ul>
+
+      <!-- Title & Header -->
+      <header id="check-health">
+        <h1>Windows Boot & System Health Report (BootReport)</h1>
+      </header>
+      <p class="subtitle">
+        An open-source Windows hardware and boot diagnostic tool featuring Boot Performance breakdown, Battery Health, SSD/NVMe SMART, and System Crash analysis, along with advanced troubleshooting.
+      </p>
+
+      <hr/>
+
+      <!-- METHODS TABS WITH SLIDING INDICATOR -->
+      <h3 id="launch-methods">Launch Methods</h3>
+
+      <div class="tabs-container">
+        <div class="tabs-wrapper">
+          <ul class="tabs" role="tablist">
+            <li class="tabs__item tabs__item--active" onclick="switchTab(0, this)">Method 1: PowerShell (Recommended)</li>
+            <li class="tabs__item" onclick="switchTab(1, this)">Method 2: Traditional (Offline)</li>
+          </ul>
+          <div class="tab-indicator" id="tabIndicator"></div>
+        </div>
+
+        <div class="tab-content">
+          <!-- TAB 1: POWERSHELL ONLINE -->
+          <div class="tab-panel active" id="tab-0">
+            <p><strong>This method is the most convenient and works on Windows 8.1, 10, and 11.</strong></p>
+            <ol>
+              <li>Click the <strong>Start Menu</strong>, type <code>PowerShell</code>, and open it.</li>
+              <li>Copy and paste the code below and press <strong>Enter.</strong></li>
+            </ol>
+
+            <!-- LAUNCHER COMMAND BLOCK WITH INTERACTIVE SPOTLIGHT -->
+            <div class="launcher-command" id="launcherBox">
+              <div class="launcher-header">
+                <span class="terminal-tag"><span class="pulse-dot"></span> PowerShell (Administrator recommended)</span>
+                <span>One-line launcher</span>
+              </div>
+              <div class="launcher-code">
+                <code><span class="cmd-prefix">PS&gt;</span>irm https://get.bootreport.dev | iex</code>
+                <button class="btn-copy" onclick="copyCommand('irm https://get.bootreport.dev | iex', this)">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  <span>Copy</span>
+                </button>
+              </div>
+            </div>
+
+            <ol start="3">
+              <li>When prompted by UAC, click <strong>Yes</strong> to grant Administrator permission to collect hardware event logs.</li>
+              <li>The script will collect all diagnostic metrics and automatically launch your comprehensive <strong>BootReport.html</strong> on your Desktop!</li>
+            </ol>
+          </div>
+
+          <!-- TAB 2: OFFLINE SCRIPT -->
+          <div class="tab-panel" id="tab-1">
+            <div id="offline">
+              <p><strong>Use this method if you prefer downloading a file or cannot use the PowerShell online method.</strong></p>
+              <ol>
+                <li>Download the script:
+                  <ul>
+                    <li><a href="./BootReport.ps1" download><strong>BootReport.ps1</strong></a> (Direct PowerShell script)</li>
+                    <li><a href="#" download><strong>BootReport.zip</strong></a> (Full package archive)</li>
+                  </ul>
+                </li>
+                <li>Right-click the Start Menu &gt; Select <strong>Windows Terminal (Admin)</strong> or <strong>PowerShell (Run as Administrator)</strong>.</li>
+                <li>Run the command:
+                  <div class="inline-code-box">
+                    <code>powershell -ExecutionPolicy Bypass -File .\BootReport.ps1</code>
+                    <button class="mini-copy-btn" onclick="copyCommand('powershell -ExecutionPolicy Bypass -File .\\BootReport.ps1', this)">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                    </button>
+                  </div>
+                </li>
+                <li>Optional arguments:
+                  <ul>
+                    <li><code>-Days 30</code>: Scan last 30 days instead of default 60.</li>
+                    <li><code>-Out "D:\Report.html"</code>: Save to custom path instead of Desktop.</li>
+                    <li><code>-Lang vi</code> hoặc <code>-Lang en</code>: Choose language explicitly.</li>
+                    <li><code>-NoOpen</code>: Generate file quietly without opening browser.</li>
+                  </ul>
+                </li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ANIMATED COLLAPSIBLE TROUBLESHOOTING -->
+      <details class="details-box" id="troubleshoot">
+        <summary>
+          <span><strong>Having trouble? (Blocked by ISP or Old Windows)</strong></span>
+          <svg class="summary-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="details-content">
+          <p><strong>If the command is blocked:</strong><br>
+          Some ISPs block newly registered domains. Use this command to bypass DNS blocks (Windows 10/11 only):</p>
+          <div class="inline-code-box">
+            <code>iex (curl.exe -s --doh-url https://1.1.1.1/dns-query https://get.bootreport.dev | Out-String)</code>
+            <button class="mini-copy-btn" onclick="copyCommand('iex (curl.exe -s --doh-url https://1.1.1.1/dns-query https://get.bootreport.dev | Out-String)', this)" title="Copy bypass command">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            </button>
+          </div>
+
+          <p><strong>If you receive a TLS/SSL Error (Older Windows):</strong><br>
+          If you are on an old build of Windows 8.1 or 10, run this command <em>before</em> the main command:</p>
+          <div class="inline-code-box">
+            <code>[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12</code>
+            <button class="mini-copy-btn" onclick="copyCommand('[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12', this)" title="Copy TLS fix">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            </button>
+          </div>
+
+          <p><strong>Bypass ExecutionPolicy restriction:</strong><br>
+          If PowerShell restricts running unsigned scripts on your machine:</p>
+          <div class="inline-code-box">
+            <code>powershell -ExecutionPolicy Bypass -Command "irm https://get.bootreport.dev | iex"</code>
+            <button class="mini-copy-btn" onclick="copyCommand('powershell -ExecutionPolicy Bypass -Command &quot;irm https://get.bootreport.dev | iex&quot;', this)" title="Copy bypass command">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            </button>
+          </div>
+        </div>
+      </details>
+
+      <!-- TIP ADMONITION -->
+      <div class="admonition admonition-tip">
+        <div class="admonition-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+          tip
+        </div>
+        <p>
+          The generated HTML report is completely standalone with embedded CSS and offline charts. You can share the file directly with tech support or keep it to track battery health over time.
+        </p>
+      </div>
+
+      <!-- NOTE ADMONITION -->
+      <div class="admonition admonition-note">
+        <div class="admonition-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+          note
+        </div>
+        <p>
+          The <code>irm</code> command in PowerShell downloads a script from a specified URL, and the <code>iex</code> command executes it. BootReport uses native Windows Diagnostics (WMI, CIM, and Event Logs). It does NOT install background services or modify system files.
+        </p>
+      </div>
+
+      <hr/>
+
+      <!-- DIAGNOSTIC MODULES -->
+      <h2 id="features">Diagnostic Modules &amp; Capabilities</h2>
+      <p>
+        BootReport queries Windows subsystem telemetry and hardware management counters directly to diagnose performance bottlenecks and hardware wear without third-party services.
+      </p>
+
+      <!-- MODULE 1: BOOT TIME -->
+      <div class="module-card" id="boot-time">
+        <div class="module-header">
+          <div class="module-title-group">
+            <div class="module-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <h3>Boot Time &amp; Startup Degradation</h3>
+          </div>
+          <span class="module-badge">Event ID 100-109</span>
+        </div>
+        <p>
+          Queries <code>Microsoft-Windows-Diagnostics-Performance/Operational</code> to record exact boot timeline phases down to milliseconds:
+        </p>
+        <div class="metric-tags">
+          <span class="tag">MainPathBootTime</span>
+          <span class="tag">BootKernelPostTime</span>
+          <span class="tag">BootDriversInitTime</span>
+          <span class="tag">UserLogonWaitTime</span>
+        </div>
+        <p class="module-desc">
+          Detects startup degradation caused by sluggish applications (Event ID 101), driver delays (Event ID 102), and service stalls (Event ID 103). Flags reboots exceeding the 30-second SSD threshold.
+        </p>
+      </div>
+
+      <!-- MODULE 2: BATTERY & CYCLES -->
+      <div class="module-card" id="battery-health">
+        <div class="module-header">
+          <div class="module-title-group">
+            <div class="module-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="16" height="10" rx="2" ry="2"/><line x1="21" y1="11" x2="21" y2="13"/></svg>
+            </div>
+            <h3>Battery Wear &amp; Cycle Count</h3>
+          </div>
+          <span class="module-badge">WMI / PowerCfg</span>
+        </div>
+        <p>
+          Extracts internal battery controller telemetry via native CIM and Powercfg records:
+        </p>
+        <div class="metric-tags">
+          <span class="tag">Design Capacity (mWh)</span>
+          <span class="tag">Full Charge Capacity</span>
+          <span class="tag">Cycle Count</span>
+          <span class="tag">Wear Percentage</span>
+        </div>
+        <p class="module-desc">
+          Measures permanent cell degradation: <code>Wear = (1 - FullCharge / Design) * 100%</code>. Triggers a maintenance warning when wear exceeds 25% or charge cycles exceed 500 loops.
+        </p>
+      </div>
+
+      <!-- MODULE 3: SSD / NVMe SMART -->
+      <div class="module-card" id="ssd-smart">
+        <div class="module-header">
+          <div class="module-title-group">
+            <div class="module-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="12" x2="2" y2="12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
+            </div>
+            <h3>SSD &amp; NVMe SMART Health</h3>
+          </div>
+          <span class="module-badge">MSFT_PhysicalDisk</span>
+        </div>
+        <p>
+          Queries Storage Reliability Counters directly from the NVMe/SATA controller:
+        </p>
+        <div class="metric-tags">
+          <span class="tag">Operational Status</span>
+          <span class="tag">Wear Percentage</span>
+          <span class="tag">Drive Temperature</span>
+          <span class="tag">NTFS Event 55</span>
+        </div>
+        <p class="module-desc">
+          Monitors remaining flash endurance, operational heat (throttling threshold &gt; 55°C), read/write error counters, and inspects the System log for NTFS block corruption warnings.
+        </p>
+      </div>
+
+      <!-- MODULE 4: SYSTEM CRASHES -->
+      <div class="module-card" id="system-crashes">
+        <div class="module-header">
+          <div class="module-title-group">
+            <div class="module-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+            </div>
+            <h3>Crash &amp; Sudden Power Loss Tracking</h3>
+          </div>
+          <span class="module-badge">Kernel-Power 41 / BSOD</span>
+        </div>
+        <p>
+          Scans the Windows System Event Log across the past 30 to 60 days:
+        </p>
+        <div class="metric-tags">
+          <span class="tag">Kernel-Power 41 (Reboot)</span>
+          <span class="tag">BugCheck 1001 (BSOD)</span>
+          <span class="tag">WHEA-Logger (Hardware)</span>
+          <span class="tag">MiniDump Verification</span>
+        </div>
+        <p class="module-desc">
+          Catches unexpected power failures, PSU brownouts, WHEA CPU/PCIe bus exceptions, and blue-screen crashes with exact timestamps and hex stop codes.
+        </p>
+      </div>
+
+      <hr/>
+
+      <!-- DIAGNOSTICS SUMMARY TABLE -->
+      <h2 id="diagnostics-summary">Diagnostics Summary</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Module</th>
+            <th>Target Metrics</th>
+            <th>Normal Threshold</th>
+            <th>Alert Indicator</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Boot Time</strong></td>
+            <td>Event ID 100 MainPath, Kernel, Drivers</td>
+            <td>&lt; 30s (SSD / NVMe)</td>
+            <td>&gt; 60s, apps/drivers causing slowdown (ID 101-109)</td>
+          </tr>
+          <tr>
+            <td><strong>Laptop Battery</strong></td>
+            <td>Design vs Full Capacity, Cycle Count</td>
+            <td>Wear &lt; 15%</td>
+            <td>Wear &gt; 25%, cycles &gt; 500, status degraded</td>
+          </tr>
+          <tr>
+            <td><strong>Storage Drive</strong></td>
+            <td>SMART Reliability, Wear, Temp, Errors</td>
+            <td>Wear &lt; 10%, Temp &lt; 55°C</td>
+            <td>Health != Healthy, Wear &gt; 20%, NTFS Event 55</td>
+          </tr>
+          <tr>
+            <td><strong>Memory (RAM)</strong></td>
+            <td>Visible Memory, Clock Speed, Module Slots</td>
+            <td>Free &gt; 20%</td>
+            <td>Single-channel configuration, speed below rated XMP</td>
+          </tr>
+          <tr>
+            <td><strong>System Crashes</strong></td>
+            <td>Kernel-Power 41, WHEA, BugCheck 1001 (BSOD)</td>
+            <td>0 incidents in 30 days</td>
+            <td>Any sudden reboot or hardware logger exception</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <hr/>
+
+      <!-- INTERACTIVE TERMINAL SIMULATOR WITH ANIMATED LOG STREAM -->
+      <h2 id="terminal-preview">Live Terminal Output Simulator</h2>
+      <div class="screenshot-window">
+        <div class="screenshot-titlebar">
+          <div class="window-dots">
+            <div class="dot dot-red" title="Close"></div>
+            <div class="dot dot-yellow" title="Minimize"></div>
+            <div class="dot dot-green" title="Maximize"></div>
+          </div>
+          <span>Administrator: Windows PowerShell</span>
+          <button class="btn-simulate" id="btnSimulateRun" onclick="simulateExecution()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <span>Run Simulation</span>
+          </button>
+        </div>
+        <div class="screenshot-body" id="terminalOutput">
+          <div class="log-line show"><span class="log-cyan">PS C:\WINDOWS\system32&gt;</span> irm https://get.bootreport.dev | iex<span class="cursor-blink" id="termCursor"></span></div>
+          <div class="log-line show log-muted mt-2">[i] Dang thu thap thong tin pin, o dia, RAM, su kien he thong...</div>
+          <div class="log-line show">[+] Da quet thanh cong 18 lan khoi dong trong 60 ngay qua</div>
+          <div class="log-line show">[+] Boot Time TB: <span class="log-green">14.8 giay</span> (BIOS: 3.2s, Kernel: 2.1s, Drivers: 4.5s)</div>
+          <div class="log-line show">[+] Pin: Dung luong <span class="log-green">52.400 / 56.000 mWh</span> (Chai 6.4%, 142 chu ky)</div>
+          <div class="log-line show">[+] SSD: Samsung 980 Pro 1TB (Health: <span class="log-green">Good</span>, Do mon: 3%, Nhiet do: 42°C)</div>
+          <div class="log-line show">[+] Su kien loi: <span class="log-green">0</span> lan sap nguon (Kernel-Power 41), <span class="log-green">0</span> loi BSOD</div>
+          <div class="log-line show log-green mt-2">[✓] Da xuat bao cao: C:\Users\ACER\Desktop\BootReport.html</div>
+          <div class="log-line show log-muted">[i] Dang tu dong mo bao cao tren trinh duyet mac dinh...</div>
+        </div>
+      </div>
+
+      <hr/>
+
+      <!-- LATEST RELEASE -->
+      <h2 id="latest-release">BootReport Latest Release &amp; Notes</h2>
+      <p>
+        Current Stable: <strong>v2.4 (2026 Edition)</strong> — Built with pure Windows PowerShell, CIM, and native Event Tracing.
+      </p>
+      <ul>
+        <li><strong>Zero Dependencies:</strong> Runs out-of-the-box on Windows 11, Windows 10, and Windows 8.1 without external packages.</li>
+        <li><strong>Safe &amp; Non-Invasive:</strong> Read-only hardware telemetry. Does NOT modify registry settings or install background services.</li>
+        <li><strong>Offline-Ready:</strong> Report output is self-contained with inline CSS and lightweight SVG charts that open directly in any browser.</li>
+      </ul>
+      <p>
+        <a href="https://github.com" target="_blank">GitHub Repository</a> &nbsp;•&nbsp; 
+        <a href="./BootReport.ps1" download>Direct BootReport.ps1 Script</a> &nbsp;•&nbsp; 
+        <a href="#launch-methods">PowerShell One-Liner</a>
+      </p>
+
+    </main>
+
+    <!-- RIGHT TABLE OF CONTENTS -->
+    <aside class="docs-toc">
+      <div class="toc-title">On this page</div>
+      <ul class="toc-list">
+        <li><a href="#launch-methods" id="toc-launch-methods">Launch Methods</a></li>
+        <li><a href="#troubleshoot" id="toc-troubleshoot">Troubleshoot &amp; Bypass</a></li>
+        <li class="toc-heading">Diagnostic Modules</li>
+        <li><a href="#boot-time" id="toc-boot-time">Boot Time Analysis</a></li>
+        <li><a href="#battery-health" id="toc-battery-health">Battery &amp; Cycles</a></li>
+        <li><a href="#ssd-smart" id="toc-ssd-smart">SSD / NVMe SMART</a></li>
+        <li><a href="#system-crashes" id="toc-system-crashes">Crash &amp; Kernel Events</a></li>
+        <li class="toc-heading">Overview &amp; Tools</li>
+        <li><a href="#diagnostics-summary" id="toc-summary">Diagnostics Summary</a></li>
+        <li><a href="#terminal-preview" id="toc-terminal">Terminal Simulator</a></li>
+        <li><a href="#latest-release" id="toc-release">Latest Release &amp; Notes</a></li>
+      </ul>
+    </aside>
+  </div>
+
+  <!-- FLOATING TOAST -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    // Tab indicator positioning and switching
+    const tabs = document.querySelectorAll('.tabs__item');
+    const panels = document.querySelectorAll('.tab-panel');
+    const indicator = document.getElementById('tabIndicator');
+
+    function updateTabIndicator(activeTab) {
+      if (!indicator || !activeTab) return;
+      indicator.style.width = `${activeTab.offsetWidth}px`;
+      indicator.style.transform = `translateX(${activeTab.offsetLeft}px)`;
+    }
+
+    function switchTab(index, tabEl) {
+      tabs.forEach((tab, i) => {
+        if (i === index) {
+          tab.classList.add('tabs__item--active');
+          panels[i].classList.add('active');
+        } else {
+          tab.classList.remove('tabs__item--active');
+          panels[i].classList.remove('active');
+        }
+      });
+      updateTabIndicator(tabEl || tabs[index]);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      updateTabIndicator(document.querySelector('.tabs__item--active'));
+      initScrollSpy();
+    });
+    window.addEventListener('resize', () => {
+      updateTabIndicator(document.querySelector('.tabs__item--active'));
+    });
+
+    // Spotlight glow cursor tracking on launcherBox
+    const launcherBox = document.getElementById('launcherBox');
+    if (launcherBox) {
+      launcherBox.addEventListener('mousemove', (e) => {
+        const rect = launcherBox.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        launcherBox.style.setProperty('--glow-x', `${x}px`);
+        launcherBox.style.setProperty('--glow-y', `${y}px`);
+      });
+    }
+
+    // Floating Toast Notification
+    function showToast(message) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = 'toast-message';
+      toast.innerHTML = `
+        <svg class="toast-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        <span>${message}</span>
+      `;
+      container.appendChild(toast);
+      requestAnimationFrame(() => toast.classList.add('show'));
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+      }, 2600);
+    }
+
+    // Copy command with smooth button pop & toast
+    async function copyCommand(text, btn) {
+      try {
+        await navigator.clipboard.writeText(text);
+        const originalHTML = btn.innerHTML;
+        btn.classList.add('copied');
+        btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> <span>Copied!</span>`;
+        showToast('Copied to clipboard! Press Ctrl+V in PowerShell.');
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          btn.innerHTML = originalHTML;
+        }, 2000);
+      } catch (err) {
+        console.error('Copy failed', err);
+      }
+    }
+
+    // Live Terminal Simulation Runner
+    let isSimulating = false;
+    async function simulateExecution() {
+      if (isSimulating) return;
+      isSimulating = true;
+
+      const btn = document.getElementById('btnSimulateRun');
+      btn.style.opacity = '0.5';
+      btn.style.pointerEvents = 'none';
+
+      const terminal = document.getElementById('terminalOutput');
+      terminal.innerHTML = `<div><span class="log-cyan">PS C:\\WINDOWS\\system32&gt;</span> <span id="simTyping"></span><span class="cursor-blink"></span></div>`;
+
+      const cmdText = 'irm https://get.bootreport.dev | iex';
+      const simTyping = document.getElementById('simTyping');
+
+      for (let i = 0; i < cmdText.length; i++) {
+        simTyping.textContent += cmdText[i];
+        await new Promise(r => setTimeout(r, 35));
+      }
+
+      await new Promise(r => setTimeout(r, 300));
+
+      const logs = [
+        '<div class="log-line log-muted mt-2">[i] Dang thu thap thong tin pin, o dia, RAM, su kien he thong...</div>',
+        '<div class="log-line">[+] Da quet thanh cong 18 lan khoi dong trong 60 ngay qua</div>',
+        '<div class="log-line">[+] Boot Time TB: <span class="log-green">14.8 giay</span> (BIOS: 3.2s, Kernel: 2.1s, Drivers: 4.5s)</div>',
+        '<div class="log-line">[+] Pin: Dung luong <span class="log-green">52.400 / 56.000 mWh</span> (Chai 6.4%, 142 chu ky)</div>',
+        '<div class="log-line">[+] SSD: Samsung 980 Pro 1TB (Health: <span class="log-green">Good</span>, Do mon: 3%, Nhiet do: 42°C)</div>',
+        '<div class="log-line">[+] Su kien loi: <span class="log-green">0</span> lan sap nguon (Kernel-Power 41), <span class="log-green">0</span> loi BSOD</div>',
+        '<div class="log-line log-green mt-2">[✓] Da xuat bao cao: C:\\Users\\ACER\\Desktop\\BootReport.html</div>',
+        '<div class="log-line log-muted">[i] Dang tu dong mo bao cao tren trinh duyet mac dinh...</div>'
+      ];
+
+      for (const lineHTML of logs) {
+        const temp = document.createElement('div');
+        temp.innerHTML = lineHTML;
+        const el = temp.firstElementChild;
+        terminal.appendChild(el);
+        requestAnimationFrame(() => el.classList.add('show'));
+        await new Promise(r => setTimeout(r, 260));
+      }
+
+      showToast('Simulation complete! BootReport.html generated.');
+      btn.style.opacity = '1';
+      btn.style.pointerEvents = 'auto';
+      isSimulating = false;
+    }
+
+    // Theme toggle (Dark / Light) with smooth flip
+    const themeBtn = document.getElementById('themeToggleBtn');
+    const sunIcon = document.getElementById('themeIconSun');
+    const moonIcon = document.getElementById('themeIconMoon');
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('massgrave-theme', theme);
+      if (theme === 'dark') {
+        sunIcon.style.display = 'block';
+        moonIcon.style.display = 'none';
+      } else {
+        sunIcon.style.display = 'none';
+        moonIcon.style.display = 'block';
+      }
+    }
+
+    const savedTheme = localStorage.getItem('massgrave-theme') || 'dark';
+    setTheme(savedTheme);
+
+    themeBtn.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme');
+      setTheme(current === 'dark' ? 'light' : 'dark');
+    });
+
+    /* ================================================================ */
+    /* DUAL-SYNCHRONIZED SCROLL SPY: CUỘN TỚI ĐÂU NHẢY TỚI ĐÓ           */
+    /* Đồng bộ cả Left Sidebar và Right TOC khi cuộn trang hoặc bấm link */
+    /* ================================================================ */
+
+    // Danh sách các mốc định vị trên trang đồng bộ chuẩn xác ID
+    const spySections = [
+      { id: 'check-health', sidebarId: 'sb-check-health', tocId: 'toc-launch-methods' },
+      { id: 'launch-methods', sidebarId: 'sb-check-health', tocId: 'toc-launch-methods' },
+      { id: 'troubleshoot', sidebarId: 'sb-troubleshoot', tocId: 'toc-troubleshoot' },
+      { id: 'boot-time', sidebarId: 'sb-boot-time', tocId: 'toc-boot-time' },
+      { id: 'battery-health', sidebarId: 'sb-battery-health', tocId: 'toc-battery-health' },
+      { id: 'ssd-smart', sidebarId: 'sb-ssd-smart', tocId: 'toc-ssd-smart' },
+      { id: 'system-crashes', sidebarId: 'sb-system-crashes', tocId: 'toc-system-crashes' },
+      { id: 'diagnostics-summary', sidebarId: 'sb-summary', tocId: 'toc-summary' },
+      { id: 'terminal-preview', sidebarId: 'sb-terminal', tocId: 'toc-terminal' },
+      { id: 'latest-release', sidebarId: 'sb-release', tocId: 'toc-release' }
+    ];
+
+    function initScrollSpy() {
+      // Click handler cho mọi anchor link (Scroll mượt + nhảy chuẩn xác)
+      document.querySelectorAll('a[href^="#"]').forEach(link => {
+        link.addEventListener('click', (e) => {
+          const href = link.getAttribute('href');
+          if (href === '#' || !href) return;
+          const targetId = href.substring(1);
+
+          // Nếu bấm vào offline, tự động chuyển sang Tab 2 và cuộn đến khu vực Launch Methods
+          if (targetId === 'offline') {
+            e.preventDefault();
+            switchTab(1, tabs[1]);
+            const targetEl = document.getElementById('launch-methods');
+            if (targetEl) {
+              const y = targetEl.getBoundingClientRect().top + window.pageYOffset - 75;
+              window.scrollTo({ top: y, behavior: 'smooth' });
+            }
+            const activeSec = spySections.find(s => s.id === 'launch-methods');
+            updateActiveItems(activeSec);
+            return;
+          }
+
+          // Nếu bấm vào troubleshoot, tự động bung mở accordion
+          if (targetId === 'troubleshoot') {
+            const det = document.getElementById('troubleshoot');
+            if (det) det.open = true;
+          }
+
+          const targetEl = document.getElementById(targetId);
+          if (!targetEl) return;
+
+          e.preventDefault();
+
+          // Trừ hao 75px chiều cao navbar cố định
+          const yOffset = -75;
+          const y = targetEl.getBoundingClientRect().top + window.pageYOffset + yOffset;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+
+          history.pushState(null, '', '#' + targetId);
+
+          const matchedSec = spySections.find(s => s.id === targetId) ||
+                             spySections.find(s => s.sidebarId === link.id) ||
+                             spySections[0];
+          updateActiveItems(matchedSec);
+        });
+      });
+
+      function updateActiveItems(activeSec) {
+        if (!activeSec) return;
+
+        // Cập nhật Left Sidebar
+        document.querySelectorAll('.sidebar-menu a').forEach(item => item.classList.remove('active'));
+        if (activeSec.sidebarId) {
+          const matchedSidebar = document.getElementById(activeSec.sidebarId);
+          if (matchedSidebar) {
+            matchedSidebar.classList.add('active');
+          }
+        }
+
+        // Cập nhật Right TOC
+        document.querySelectorAll('.toc-list a').forEach(item => item.classList.remove('active'));
+        if (activeSec.tocId) {
+          const matchedToc = document.getElementById(activeSec.tocId);
+          if (matchedToc) {
+            matchedToc.classList.add('active');
+          }
+        }
+      }
+
+      // Lắng nghe scroll để phát hiện vị trí hiện tại
+      let ticking = false;
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          window.requestAnimationFrame(() => {
+            const scrollY = window.scrollY;
+
+            // 1. Khi ở đầu trang (dưới 100px), luôn active Check Health
+            if (scrollY < 100) {
+              updateActiveItems(spySections[0]);
+              ticking = false;
+              return;
+            }
+
+            // 2. Khi cuộn tới cuối trang, active mục cuối cùng
+            const isBottom = (window.innerHeight + scrollY) >= (document.documentElement.scrollHeight - 60);
+            if (isBottom) {
+              updateActiveItems(spySections[spySections.length - 1]);
+              ticking = false;
+              return;
+            }
+
+            // 3. Quét tuần tự theo thứ tự document cho các phần tử đang hiển thị
+            const threshold = scrollY + 140;
+            let current = spySections[0];
+
+            for (let i = 0; i < spySections.length; i++) {
+              const item = spySections[i];
+              const el = document.getElementById(item.id);
+              if (el && el.offsetParent !== null && el.offsetHeight > 0) {
+                const top = el.getBoundingClientRect().top + scrollY;
+                if (threshold >= top) {
+                  current = item;
+                }
+              }
+            }
+
+            updateActiveItems(current);
+            ticking = false;
+          });
+          ticking = true;
+        }
+      }, { passive: true });
+
+      // Khởi tạo ban đầu
+      const initialHash = window.location.hash.substring(1);
+      const initialSec = spySections.find(s => s.id === initialHash) || spySections[0];
+      updateActiveItems(initialSec);
+    }
+  </script>
+</body>
+</html>
