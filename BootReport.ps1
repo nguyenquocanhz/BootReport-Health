@@ -1,4 +1,4 @@
-﻿<#
+<#
   BootReport.ps1 - Xuat bao cao boot Windows ra file HTML
   Cach dung (PowerShell, nen chay Run as administrator):
       powershell -ExecutionPolicy Bypass -File .\BootReport.ps1
@@ -38,9 +38,14 @@ $M = $Messages[$uiLang]
 # Tu xin quyen Administrator neu chua co
 $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 if (-not $isAdmin) {
-    $argList = @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', "`"$PSCommandPath`"",
-                 '-Days', $Days, '-Out', "`"$Out`"", '-Lang', $Lang, '-Elevated')
-    if ($NoOpen) { $argList += '-NoOpen' }
+    if ($PSCommandPath) {
+        $argList = @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', "`"$PSCommandPath`"",
+                     '-Days', $Days, '-Out', "`"$Out`"", '-Lang', $Lang, '-Elevated')
+        if ($NoOpen) { $argList += '-NoOpen' }
+    } else {
+        $rawUrl = 'https://raw.githubusercontent.com/nguyenquocanhz/BootReport-Health/main/BootReport.ps1'
+        $argList = @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-Command', "irm $rawUrl | iex")
+    }
     try {
         Start-Process -FilePath 'powershell.exe' -Verb RunAs -ArgumentList $argList
     } catch {

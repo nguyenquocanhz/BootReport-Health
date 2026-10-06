@@ -18,9 +18,18 @@ Một công cụ mã nguồn mở viết bằng PowerShell giúp kiểm tra toà
 
 ## 🚀 Hướng dẫn sử dụng
 
-### 1. Chạy trực tiếp bằng PowerShell (Khuyến nghị Run as Administrator)
+### ⚡ 1. Chạy nhanh 1 dòng lệnh (Không cần tải file)
 
-Mở PowerShell với quyền Administrator và chạy lệnh:
+Mở **PowerShell** (khuyến nghị Run as Administrator) và dán lệnh sau:
+
+```powershell
+irm https://raw.githubusercontent.com/nguyenquocanhz/BootReport-Health/main/BootReport.ps1 | iex
+```
+*(Nếu mở ở PowerShell thường, script sẽ tự động kích hoạt hộp thoại UAC để xin quyền Administrator)*
+
+### 📁 2. Chạy từ file tải về (Offline / Local)
+
+Mở PowerShell tại thư mục chứa file và chạy:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\BootReport.ps1
