@@ -1588,10 +1588,10 @@
           <div class="donate-grid">
             <!-- Left: QR Code Box -->
             <div class="donate-qr-box">
-              <img id="donateQrImg" class="donate-qr-img" src="https://api.vietqr.io/image/970422-0941813157-compact2.png?amount=20000&addInfo=BootReport%20Donate&accountName=NGUYEN%20QUOC%20ANH" alt="VietQR MBBank 0941813157">
+              <img id="donateQrImg" class="donate-qr-img" src="https://api.vietqr.io/image/vietcombank-nguyenquocanh1368-compact2.png?amount=20000&addInfo=BootReport%20Donate&accountName=NGUYEN%20QUOC%20ANH" alt="VietQR Vietcombank nguyenquocanh1368">
               <div class="donate-qr-sub">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                <span>VietQR • Napas247 • MBBank</span>
+                <span>VietQR • Napas247 • Vietcombank</span>
               </div>
             </div>
 
@@ -1625,7 +1625,7 @@
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                     <span data-i18n="donate.bank">Ngân hàng:</span>
                   </span>
-                  <span class="bank-info-value">MBBank (Quân Đội)</span>
+                  <span class="bank-info-value">Vietcombank (VCB)</span>
                 </div>
                 <div class="bank-info-row">
                   <span class="bank-info-label">
@@ -1640,8 +1640,8 @@
                     <span data-i18n="donate.accNumber">Số tài khoản:</span>
                   </span>
                   <span class="bank-info-value">
-                    <span>0941813157</span>
-                    <button class="btn-copy-info" onclick="copyBankInfo('0941813157', this, 'Số tài khoản')">
+                    <span>nguyenquocanh1368</span>
+                    <button class="btn-copy-info" onclick="copyBankInfo('nguyenquocanh1368', this, 'Số tài khoản')">
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                       <span data-i18n="donate.copy">Sao chép</span>
                     </button>
@@ -2138,7 +2138,7 @@
       const qrImg = document.getElementById('donateQrImg');
       if (!qrImg) return;
 
-      const base = 'https://api.vietqr.io/image/970422-0941813157-compact2.png';
+      const base = 'https://api.vietqr.io/image/vietcombank-nguyenquocanh1368-compact2.png';
       if (amount > 0) {
         qrImg.src = `${base}?amount=${amount}&addInfo=BootReport%20Donate&accountName=NGUYEN%20QUOC%20ANH`;
       } else {

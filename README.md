@@ -57,13 +57,13 @@ Mở trực tiếp file `index.html` trên trình duyệt để tham khảo tài
 
 Dự án BootReport hoàn toàn miễn phí & mã nguồn mở. Nếu công cụ hữu ích cho công việc của bạn, hãy gửi tặng một cốc cà phê ủng hộ tác giả nhé:
 
-- **Ngân hàng:** MBBank (Ngân hàng Quân Đội)
-- **Số tài khoản:** `0941813157`
+- **Ngân hàng:** Vietcombank (Ngoại thương Việt Nam)
+- **Số tài khoản:** `nguyenquocanh1368`
 - **Chủ tài khoản:** `NGUYEN QUOC ANH`
 - **Nội dung:** `BootReport Donate`
 
 <p align="center">
-  <img src="https://api.vietqr.io/image/970422-0941813157-compact2.png?amount=20000&addInfo=BootReport%20Donate&accountName=NGUYEN%20QUOC%20ANH" width="260" alt="VietQR Donate MBBank 0941813157" />
+  <img src="https://api.vietqr.io/image/vietcombank-nguyenquocanh1368-compact2.png?amount=20000&addInfo=BootReport%20Donate&accountName=NGUYEN%20QUOC%20ANH" width="260" alt="VietQR Donate Vietcombank nguyenquocanh1368" />
 </p>
 
 ---
