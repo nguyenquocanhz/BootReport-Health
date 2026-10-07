@@ -1153,6 +1153,31 @@
       margin-top: 0.25rem;
     }
 
+    /* Footer Copyright */
+    .docs-footer {
+      margin-top: 3.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--ifm-border-color);
+      text-align: center;
+      font-size: 0.875rem;
+      color: var(--ifm-color-content-secondary);
+    }
+    .docs-footer-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      align-items: center;
+    }
+    .docs-footer a {
+      font-weight: 600;
+      color: var(--ifm-color-primary);
+    }
+    .docs-footer-sub {
+      font-size: 0.8rem;
+      opacity: 0.85;
+      margin: 0;
+    }
+
     @media (max-width: 996px) {
       .docs-sidebar, .docs-toc { display: none; }
       .docs-content { padding: 1.5rem 1.25rem; }
@@ -1688,6 +1713,13 @@
         <a href="#launch-methods" data-i18n="rel.oneLiner">Lệnh chạy 1 dòng PowerShell</a>
       </p>
 
+      <!-- FOOTER COPYRIGHT -->
+      <footer class="docs-footer">
+        <div class="docs-footer-inner">
+          <p data-i18n="footer.copyright">© 2026 BootReport • Được phát triển bởi <a href="https://github.com/nguyenquocanhz" target="_blank">NGUYỄN QUỐC ANH</a>. Phát hành theo giấy phép <a href="https://github.com/nguyenquocanhz/BootReport-Health/blob/main/LICENSE" target="_blank">MIT License</a>.</p>
+          <p class="docs-footer-sub" data-i18n="footer.sub">Công cụ chẩn đoán phần cứng và tốc độ khởi động Windows an toàn, phi lợi nhuận &amp; mã nguồn mở.</p>
+        </div>
+      </footer>
     </main>
 
     <!-- RIGHT TABLE OF CONTENTS -->
@@ -1854,7 +1886,9 @@
         "toc.donate": "💖 Ủng hộ (Donate)",
         "toc.release": "Phiên bản mới &amp; Ghi chú",
         "common.copy": "Sao chép",
-        "common.copied": "Đã chép!"
+        "common.copied": "Đã chép!",
+        "footer.copyright": "© 2026 BootReport • Được phát triển bởi <a href=\"https://github.com/nguyenquocanhz\" target=\"_blank\">NGUYỄN QUỐC ANH</a>. Phát hành theo giấy phép <a href=\"https://github.com/nguyenquocanhz/BootReport-Health/blob/main/LICENSE\" target=\"_blank\">MIT License</a>.",
+        "footer.sub": "Công cụ chẩn đoán phần cứng và tốc độ khởi động Windows an toàn, phi lợi nhuận &amp; mã nguồn mở."
       },
       en: {
         pageTitle: "Windows Boot & System Health Report | BootReport",
@@ -1992,7 +2026,9 @@
         "toc.donate": "💖 Donate &amp; Support",
         "toc.release": "Latest Release &amp; Notes",
         "common.copy": "Copy",
-        "common.copied": "Copied!"
+        "common.copied": "Copied!",
+        "footer.copyright": "© 2026 BootReport • Developed by <a href=\"https://github.com/nguyenquocanhz\" target=\"_blank\">NGUYEN QUOC ANH</a>. Released under the <a href=\"https://github.com/nguyenquocanhz/BootReport-Health/blob/main/LICENSE\" target=\"_blank\">MIT License</a>.",
+        "footer.sub": "An open-source, non-invasive Windows hardware &amp; boot diagnostic tool."
       }
     };
 

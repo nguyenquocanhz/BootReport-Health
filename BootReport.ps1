@@ -313,6 +313,9 @@ td.name{white-space:normal;max-width:380px;word-break:break-word}
 .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px}
 .dot.ok{background:var(--ok)} .dot.warn{background:var(--warn)} .dot.bad{background:var(--bad)}
 td .note{display:block;color:var(--muted);font-size:12px;white-space:normal}
+.footer{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);text-align:center;color:var(--muted);font-size:13px}
+.footer a{color:var(--accent);text-decoration:none}
+.footer a:hover{text-decoration:underline}
 </style>
 </head>
 <body>
@@ -346,6 +349,10 @@ td .note{display:block;color:var(--muted);font-size:12px;white-space:normal}
 
   <h2 data-i18n="hTable"></h2>
   <div class="panel" id="bootTable"></div>
+
+  <footer class="footer">
+    <p data-i18n="footerText"></p>
+  </footer>
 </main>
 
 <script>
@@ -403,7 +410,8 @@ vi:{
  evBsod:"Màn hình xanh (BugCheck)", evBsodNote:"Xem file dump bằng WhoCrashed hoặc BlueScreenView để biết driver gây lỗi.",
  summary:"<b>{0}</b> mục tốt · <b>{1}</b> cần theo dõi · <b>{2}</b> có vấn đề",
  hdrItem:"Hạng mục", hdrValue:"Giá trị", hdrRating:"Đánh giá",
- sysinfo:"{0} · {1} ({2} nhân, {3} luồng) · {4} {5} · BIOS {6}"
+ sysinfo:"{0} · {1} ({2} nhân, {3} luồng) · {4} {5} · BIOS {6}",
+ footerText:"© 2026 BootReport · Phát triển bởi NGUYỄN QUỐC ANH · Mã nguồn mở (MIT License)"
 },
 en:{
  title:"Windows health and boot report",
@@ -454,7 +462,8 @@ en:{
  evBsod:"Blue screens (BugCheck)", evBsodNote:"Inspect the dump with WhoCrashed or BlueScreenView to find the faulty driver.",
  summary:"<b>{0}</b> good · <b>{1}</b> to watch · <b>{2}</b> with problems",
  hdrItem:"Item", hdrValue:"Value", hdrRating:"Rating",
- sysinfo:"{0} · {1} ({2} cores, {3} threads) · {4} {5} · BIOS {6}"
+ sysinfo:"{0} · {1} ({2} cores, {3} threads) · {4} {5} · BIOS {6}",
+ footerText:"© 2026 BootReport · Developed by NGUYEN QUOC ANH · Open-source under MIT License"
 }};
 
 function t(k){
