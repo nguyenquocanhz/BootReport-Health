@@ -49,10 +49,26 @@ powershell -ExecutionPolicy Bypass -File .\BootReport.ps1 -Lang vi
 
 ### 3. Xem tài liệu & hướng dẫn giao diện
 
-Mở trực tiếp file `index.html` trên trình duyệt để tham khảo tài liệu kỹ thuật và hướng dẫn xử lý sự cố chi tiết.
+Mở trực tiếp file `index.html` trên trình duyệt để tham khảo tài liệu kỹ thuật, giao diện song ngữ (Tiếng Việt / English) và hướng dẫn xử lý sự cố chi tiết.
+
+---
+
+## 💖 Ủng hộ tác giả (Donate)
+
+Dự án BootReport hoàn toàn miễn phí & mã nguồn mở. Nếu công cụ hữu ích cho công việc của bạn, hãy gửi tặng một cốc cà phê ủng hộ tác giả nhé:
+
+- **Ngân hàng:** MBBank (Ngân hàng Quân Đội)
+- **Số tài khoản:** `0941813157`
+- **Chủ tài khoản:** `NGUYEN QUOC ANH`
+- **Nội dung:** `BootReport Donate`
+
+<p align="center">
+  <img src="https://api.vietqr.io/image/970422-0941813157-compact2.png?amount=20000&addInfo=BootReport%20Donate&accountName=NGUYEN%20QUOC%20ANH" width="260" alt="VietQR Donate MBBank 0941813157" />
+</p>
 
 ---
 
 ## 📄 Bản quyền (License)
 
 Dự án được phân phối dưới giấy phép [MIT License](LICENSE).
+

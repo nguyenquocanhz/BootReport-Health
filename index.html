@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en" dir="ltr" data-theme="dark">
+<html lang="vi" dir="ltr" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Windows Boot & System Health Report | BootReport</title>
-  <meta name="description" content="An open-source Windows hardware and boot diagnostic tool featuring Boot Performance, Battery Health, SSD/NVMe SMART, and System Crash analysis, along with advanced troubleshooting.">
+  <title>Báo Cáo Sức Khỏe & Tốc Độ Khởi Động Windows | BootReport</title>
+  <meta name="description" content="Công cụ mã nguồn mở kiểm tra toàn diện hiệu năng khởi động, độ chai pin laptop, tuổi thọ SSD/NVMe SMART và tra cứu lịch sử lỗi màn hình xanh (BSOD) trên Windows.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -126,7 +126,7 @@
     .navbar__left, .navbar__right {
       display: flex;
       align-items: center;
-      gap: 1.25rem;
+      gap: 1.1rem;
     }
     .navbar__brand {
       display: flex;
@@ -203,6 +203,47 @@
     .btn-github:hover {
       text-decoration: none;
       border-color: var(--ifm-color-primary);
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    }
+    .btn-donate-nav {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #f87171;
+      background: rgba(239, 68, 68, 0.08);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn-donate-nav:hover {
+      text-decoration: none;
+      background: rgba(239, 68, 68, 0.18);
+      border-color: #ef4444;
+      transform: translateY(-1px);
+      box-shadow: 0 3px 10px rgba(239, 68, 68, 0.25);
+      color: #fca5a5;
+    }
+    .btn-lang {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 0.35rem 0.65rem;
+      border-radius: 6px;
+      border: 1px solid var(--ifm-border-color);
+      color: var(--ifm-color-content);
+      background: var(--ifm-background-surface-color);
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn-lang:hover {
+      border-color: var(--ifm-color-primary);
+      color: var(--ifm-color-primary);
       transform: translateY(-1px);
       box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
     }
@@ -933,6 +974,185 @@
       margin-bottom: 0;
     }
 
+    /* Donate Section & Cards */
+    .donate-card {
+      background: var(--ifm-background-surface-color);
+      border: 1px solid var(--ifm-border-color);
+      border-radius: 12px;
+      padding: 1.75rem;
+      margin: 1.75rem 0;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+    .donate-card:hover {
+      border-color: rgba(239, 68, 68, 0.4);
+      box-shadow: 0 8px 30px rgba(239, 68, 68, 0.1);
+    }
+    .donate-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    .donate-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .donate-header h3 {
+      margin: 0;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--ifm-color-content);
+    }
+    .donate-grid {
+      display: grid;
+      grid-template-columns: 270px 1fr;
+      gap: 2rem;
+      align-items: start;
+      margin-top: 1.25rem;
+    }
+    @media (max-width: 768px) {
+      .donate-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .donate-qr-box {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    }
+    .donate-qr-img {
+      width: 100%;
+      max-width: 242px;
+      height: auto;
+      border-radius: 8px;
+      display: block;
+      margin: 0 auto;
+      transition: transform 0.2s ease;
+    }
+    .donate-qr-img:hover {
+      transform: scale(1.02);
+    }
+    .donate-qr-sub {
+      margin-top: 10px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #374151;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .donate-details {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .donate-presets-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--ifm-color-content-secondary);
+      margin-bottom: 0.4rem;
+    }
+    .donate-presets {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .preset-btn {
+      background: var(--ifm-code-background);
+      border: 1px solid var(--ifm-border-color);
+      color: var(--ifm-color-content);
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .preset-btn:hover {
+      border-color: var(--ifm-color-primary);
+      color: var(--ifm-color-primary);
+      transform: translateY(-1px);
+    }
+    .preset-btn.active {
+      background: rgba(37, 194, 160, 0.15);
+      border-color: var(--ifm-color-primary);
+      color: var(--ifm-color-primary);
+      box-shadow: 0 2px 8px rgba(37, 194, 160, 0.2);
+    }
+    .bank-info-box {
+      background: var(--ifm-code-background);
+      border: 1px solid var(--ifm-border-color);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .bank-info-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      font-size: 0.9rem;
+    }
+    .bank-info-label {
+      color: var(--ifm-color-content-secondary);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .bank-info-value {
+      font-weight: 600;
+      font-family: var(--ifm-font-family-monospace);
+      color: var(--ifm-color-content);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-copy-info {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--ifm-border-color);
+      color: var(--ifm-color-content);
+      cursor: pointer;
+      padding: 3px 9px;
+      border-radius: 5px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+    }
+    .btn-copy-info:hover {
+      background: var(--ifm-color-primary);
+      color: #141416;
+      border-color: var(--ifm-color-primary);
+      transform: scale(1.03);
+    }
+    .donate-message {
+      font-size: 0.88rem;
+      color: var(--ifm-color-content-secondary);
+      line-height: 1.6;
+      margin-top: 0.25rem;
+    }
+
     @media (max-width: 996px) {
       .docs-sidebar, .docs-toc { display: none; }
       .docs-content { padding: 1.5rem 1.25rem; }
@@ -949,13 +1169,21 @@
           <div class="navbar__logo">BR</div>
           <span>BootReport</span>
         </a>
-        <a class="navbar__link navbar__link--active" href="#check-health">Home</a>
-        <a class="navbar__link" href="#offline">Download Script</a>
-        <a class="navbar__link" href="#diagnostics-summary">Metrics</a>
-        <a class="navbar__link" href="#troubleshoot">Troubleshoot</a>
+        <a class="navbar__link navbar__link--active" href="#check-health" data-i18n="nav.home">Trang chủ</a>
+        <a class="navbar__link" href="#offline" data-i18n="nav.download">Tải Script</a>
+        <a class="navbar__link" href="#diagnostics-summary" data-i18n="nav.metrics">Chỉ số</a>
+        <a class="navbar__link" href="#troubleshoot" data-i18n="nav.troubleshoot">Sự cố</a>
       </div>
 
       <div class="navbar__right">
+        <a href="#donate" class="btn-donate-nav" id="navDonateBtn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+          <span data-i18n="nav.donate">Ủng hộ</span>
+        </a>
+        <button class="btn-lang" id="langToggleBtn" onclick="toggleLanguage()" title="Chuyển đổi ngôn ngữ / Switch language">
+          <span id="langFlag">🇻🇳</span>
+          <span id="langLabel">Tiếng Việt</span>
+        </button>
         <a href="https://github.com/nguyenquocanhz/BootReport-Health" target="_blank" class="btn-github">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
           GitHub
@@ -973,24 +1201,25 @@
     <!-- LEFT SIDEBAR WITH SYNCHRONIZED SCROLL-SPY -->
     <aside class="docs-sidebar">
       <ul class="sidebar-menu">
-        <li><a href="#check-health" id="sb-check-health" class="active"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Check Windows Health</a></li>
-        <li><a href="#offline" id="sb-offline"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download Script (.ps1)</a></li>
-        <li><a href="#troubleshoot" id="sb-troubleshoot"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Troubleshoot</a></li>
+        <li><a href="#check-health" id="sb-check-health" class="active"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> <span data-i18n="sb.checkHealth">Kiểm tra sức khỏe Windows</span></a></li>
+        <li><a href="#offline" id="sb-offline"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> <span data-i18n="sb.download">Tải Script (.ps1)</span></a></li>
+        <li><a href="#troubleshoot" id="sb-troubleshoot"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> <span data-i18n="sb.troubleshoot">Xử lý sự cố & Bỏ chặn</span></a></li>
 
         <li class="sidebar-hr"></li>
 
-        <li class="sidebar-heading">Diagnostic Modules</li>
-        <li><a href="#boot-time" id="sb-boot-time"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Boot Time Analysis</a></li>
-        <li><a href="#battery-health" id="sb-battery-health"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="16" height="10" rx="2" ry="2"/><line x1="21" y1="11" x2="21" y2="13"/></svg> Battery &amp; Cycles</a></li>
-        <li><a href="#ssd-smart" id="sb-ssd-smart"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="12" x2="2" y2="12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg> SSD / NVMe SMART</a></li>
-        <li><a href="#system-crashes" id="sb-system-crashes"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg> Crash &amp; Kernel Events</a></li>
+        <li class="sidebar-heading" data-i18n="sb.headingModules">CÁC MÔ-ĐUN CHẨN ĐOÁN</li>
+        <li><a href="#boot-time" id="sb-boot-time"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> <span data-i18n="sb.bootTime">Phân tích thời gian khởi động</span></a></li>
+        <li><a href="#battery-health" id="sb-battery-health"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="16" height="10" rx="2" ry="2"/><line x1="21" y1="11" x2="21" y2="13"/></svg> <span data-i18n="sb.battery">Sức khỏe &amp; Chu kỳ Pin</span></a></li>
+        <li><a href="#ssd-smart" id="sb-ssd-smart"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="12" x2="2" y2="12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg> <span data-i18n="sb.ssdSmart">Sức khỏe SSD / NVMe SMART</span></a></li>
+        <li><a href="#system-crashes" id="sb-system-crashes"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg> <span data-i18n="sb.crashes">Sự cố &amp; Sập nguồn Kernel</span></a></li>
 
         <li class="sidebar-hr"></li>
 
-        <li class="sidebar-heading">Overview &amp; Tools</li>
-        <li><a href="#diagnostics-summary" id="sb-summary"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg> Summary Table</a></li>
-        <li><a href="#terminal-preview" id="sb-terminal"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg> Terminal Simulator</a></li>
-        <li><a href="#latest-release" id="sb-release"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> Latest Release &amp; Notes</a></li>
+        <li class="sidebar-heading" data-i18n="sb.headingTools">TỔNG QUAN &amp; CÔNG CỤ</li>
+        <li><a href="#diagnostics-summary" id="sb-summary"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg> <span data-i18n="sb.summary">Bảng tổng hợp chỉ số</span></a></li>
+        <li><a href="#terminal-preview" id="sb-terminal"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg> <span data-i18n="sb.terminal">Mô phỏng Terminal</span></a></li>
+        <li><a href="#donate" id="sb-donate"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> <span data-i18n="sb.donate">Ủng hộ tác giả (Donate)</span></a></li>
+        <li><a href="#latest-release" id="sb-release"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> <span data-i18n="sb.release">Phiên bản mới &amp; Ghi chú</span></a></li>
       </ul>
     </aside>
 
@@ -1000,27 +1229,27 @@
       <ul class="breadcrumbs">
         <li><a href="#check-health"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></a></li>
         <li>/</li>
-        <li class="active">Windows Boot & System Health Report</li>
+        <li class="active" data-i18n="hero.breadcrumb">Báo cáo sức khỏe & tốc độ khởi động Windows</li>
       </ul>
 
       <!-- Title & Header -->
       <header id="check-health">
-        <h1>Windows Boot & System Health Report (BootReport)</h1>
+        <h1 data-i18n="hero.title">Windows Boot & System Health Report (BootReport)</h1>
       </header>
-      <p class="subtitle">
-        An open-source Windows hardware and boot diagnostic tool featuring Boot Performance breakdown, Battery Health, SSD/NVMe SMART, and System Crash analysis, along with advanced troubleshooting.
+      <p class="subtitle" data-i18n="hero.subtitle">
+        Công cụ mã nguồn mở chẩn đoán phần cứng và tốc độ khởi động Windows: phân tích các giai đoạn boot, đo độ chai pin laptop, kiểm tra sức khỏe SSD/NVMe SMART và tra cứu lịch sử lỗi màn hình xanh (BSOD).
       </p>
 
       <hr/>
 
       <!-- METHODS TABS WITH SLIDING INDICATOR -->
-      <h3 id="launch-methods">Launch Methods</h3>
+      <h3 id="launch-methods" data-i18n="launch.title">Phương Thức Khởi Chạy</h3>
 
       <div class="tabs-container">
         <div class="tabs-wrapper">
           <ul class="tabs" role="tablist">
-            <li class="tabs__item tabs__item--active" onclick="switchTab(0, this)">Method 1: PowerShell (Recommended)</li>
-            <li class="tabs__item" onclick="switchTab(1, this)">Method 2: Traditional (Offline)</li>
+            <li class="tabs__item tabs__item--active" onclick="switchTab(0, this)" data-i18n="launch.tab1">Cách 1: PowerShell (Khuyến nghị)</li>
+            <li class="tabs__item" onclick="switchTab(1, this)" data-i18n="launch.tab2">Cách 2: Truyền thống (Offline)</li>
           </ul>
           <div class="tab-indicator" id="tabIndicator"></div>
         </div>
@@ -1028,46 +1257,46 @@
         <div class="tab-content">
           <!-- TAB 1: POWERSHELL ONLINE -->
           <div class="tab-panel active" id="tab-0">
-            <p><strong>This method is the most convenient and works on Windows 8.1, 10, and 11.</strong></p>
+            <p><strong data-i18n="launch.tab1Desc">Cách nhanh nhất, tiện lợi nhất, chạy tốt trên Windows 8.1, 10 và 11.</strong></p>
             <ol>
-              <li>Click the <strong>Start Menu</strong>, type <code>PowerShell</code>, and open it.</li>
-              <li>Copy and paste the code below and press <strong>Enter.</strong></li>
+              <li data-i18n="launch.tab1Step1">Mở Start Menu, gõ <strong>PowerShell</strong> (hoặc chuột phải nút Start chọn <strong>Terminal / PowerShell</strong>).</li>
+              <li data-i18n="launch.tab1Step2">Sao chép và dán dòng lệnh bên dưới rồi nhấn <strong>Enter</strong>:</li>
             </ol>
 
             <!-- LAUNCHER COMMAND BLOCK WITH INTERACTIVE SPOTLIGHT -->
             <div class="launcher-command" id="launcherBox">
               <div class="launcher-header">
-                <span class="terminal-tag"><span class="pulse-dot"></span> PowerShell (Administrator recommended)</span>
-                <span>One-line launcher</span>
+                <span class="terminal-tag"><span class="pulse-dot"></span> <span data-i18n="launch.launcherTag">PowerShell (Khuyến nghị Administrator)</span></span>
+                <span data-i18n="launch.launcherSub">Khởi chạy 1 dòng lệnh</span>
               </div>
               <div class="launcher-code">
                 <code><span class="cmd-prefix">PS&gt;</span>irm https://raw.githubusercontent.com/nguyenquocanhz/BootReport-Health/main/BootReport.ps1 | iex</code>
                 <button class="btn-copy" onclick="copyCommand('irm https://raw.githubusercontent.com/nguyenquocanhz/BootReport-Health/main/BootReport.ps1 | iex', this)">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                  <span>Copy</span>
+                  <span data-i18n="common.copy">Sao chép</span>
                 </button>
               </div>
             </div>
 
             <ol start="3">
-              <li>When prompted by UAC, click <strong>Yes</strong> to grant Administrator permission to collect hardware event logs.</li>
-              <li>The script will collect all diagnostic metrics and automatically launch your comprehensive <strong>BootReport.html</strong> on your Desktop!</li>
+              <li data-i18n="launch.tab1Step3">Khi xuất hiện hộp thoại UAC hỏi cấp quyền, chọn <strong>Yes</strong> để cấp quyền Administrator giúp script đọc log phần cứng.</li>
+              <li data-i18n="launch.tab1Step4">Script sẽ tự động quét thông số và mở báo cáo <strong>BootReport.html</strong> trực quan ngay trên Desktop của bạn!</li>
             </ol>
           </div>
 
           <!-- TAB 2: OFFLINE SCRIPT -->
           <div class="tab-panel" id="tab-1">
             <div id="offline">
-              <p><strong>Use this method if you prefer downloading a file or cannot use the PowerShell online method.</strong></p>
+              <p><strong data-i18n="launch.tab2Desc">Sử dụng cách này nếu bạn muốn tải file về máy hoặc máy không có kết nối Internet.</strong></p>
               <ol>
-                <li>Download the script:
+                <li><span data-i18n="launch.tab2Step1">Tải script:</span>
                   <ul>
-                    <li><a href="https://raw.githubusercontent.com/nguyenquocanhz/BootReport-Health/main/BootReport.ps1" target="_blank" download><strong>BootReport.ps1</strong></a> (Direct PowerShell script)</li>
-                    <li><a href="https://github.com/nguyenquocanhz/BootReport-Health/archive/refs/heads/main.zip" download><strong>BootReport.zip</strong></a> (Full package archive)</li>
+                    <li><a href="https://raw.githubusercontent.com/nguyenquocanhz/BootReport-Health/main/BootReport.ps1" target="_blank" download><strong>BootReport.ps1</strong></a> (<span data-i18n="launch.filePs1">File PowerShell gốc</span>)</li>
+                    <li><a href="https://github.com/nguyenquocanhz/BootReport-Health/archive/refs/heads/main.zip" download><strong>BootReport.zip</strong></a> (<span data-i18n="launch.fileZip">Gói nén zip đầy đủ</span>)</li>
                   </ul>
                 </li>
-                <li>Right-click the Start Menu &gt; Select <strong>Windows Terminal (Admin)</strong> or <strong>PowerShell (Run as Administrator)</strong>.</li>
-                <li>Run the command:
+                <li data-i18n="launch.tab2Step2">Chuột phải vào Start Menu &gt; Chọn <strong>Windows Terminal (Admin)</strong> hoặc <strong>PowerShell (Run as Administrator)</strong>.</li>
+                <li><span data-i18n="launch.tab2Step3">Chạy lệnh:</span>
                   <div class="inline-code-box">
                     <code>powershell -ExecutionPolicy Bypass -File .\BootReport.ps1</code>
                     <button class="mini-copy-btn" onclick="copyCommand('powershell -ExecutionPolicy Bypass -File .\\BootReport.ps1', this)">
@@ -1075,12 +1304,12 @@
                     </button>
                   </div>
                 </li>
-                <li>Optional arguments:
+                <li><span data-i18n="launch.tab2Step4">Các tham số tùy chọn:</span>
                   <ul>
-                    <li><code>-Days 30</code>: Scan last 30 days instead of default 60.</li>
-                    <li><code>-Out "D:\Report.html"</code>: Save to custom path instead of Desktop.</li>
-                    <li><code>-Lang vi</code> hoặc <code>-Lang en</code>: Choose language explicitly.</li>
-                    <li><code>-NoOpen</code>: Generate file quietly without opening browser.</li>
+                    <li data-i18n="launch.paramDays"><code>-Days 30</code>: Quét 30 ngày gần nhất (mặc định 60 ngày).</li>
+                    <li data-i18n="launch.paramOut"><code>-Out "D:\Report.html"</code>: Lưu vào đường dẫn tùy chỉnh thay vì Desktop.</li>
+                    <li data-i18n="launch.paramLang"><code>-Lang vi</code> hoặc <code>-Lang en</code>: Chọn ngôn ngữ hiển thị báo cáo.</li>
+                    <li data-i18n="launch.paramNoOpen"><code>-NoOpen</code>: Chỉ xuất file, không tự động mở trình duyệt.</li>
                   </ul>
                 </li>
               </ol>
@@ -1092,33 +1321,40 @@
       <!-- ANIMATED COLLAPSIBLE TROUBLESHOOTING -->
       <details class="details-box" id="troubleshoot">
         <summary>
-          <span><strong>Having trouble? (Blocked by ISP or Old Windows)</strong></span>
+          <span><strong data-i18n="tb.summary">Gặp sự cố? (Bị chặn mạng, lỗi Policy Windows 11 hoặc Windows cũ)</strong></span>
           <svg class="summary-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
         </summary>
         <div class="details-content">
-          <p><strong>If the command is blocked:</strong><br>
-          Some ISPs block newly registered domains. Use this command to bypass DNS blocks (Windows 10/11 only):</p>
+          <p><strong data-i18n="tb.policyTitle">Lỗi chính sách bảo mật (ExecutionPolicy) trên Windows 11 mới cài:</strong><br>
+          <span data-i18n="tb.policyDesc">Nếu PowerShell báo lỗi <em>"running scripts is disabled on this system"</em>, chạy lệnh sau để mở quyền chạy script:</span></p>
           <div class="inline-code-box">
-            <code>iex (curl.exe -s --doh-url https://1.1.1.1/dns-query https://raw.githubusercontent.com/nguyenquocanhz/BootReport-Health/main/BootReport.ps1 | Out-String)</code>
-            <button class="mini-copy-btn" onclick="copyCommand('iex (curl.exe -s --doh-url https://1.1.1.1/dns-query https://raw.githubusercontent.com/nguyenquocanhz/BootReport-Health/main/BootReport.ps1 | Out-String)', this)" title="Copy bypass command">
+            <code>Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force</code>
+            <button class="mini-copy-btn" onclick="copyCommand('Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force', this)" title="Copy policy fix">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
             </button>
           </div>
-
-          <p><strong>If you receive a TLS/SSL Error (Older Windows):</strong><br>
-          If you are on an old build of Windows 8.1 or 10, run this command <em>before</em> the main command:</p>
-          <div class="inline-code-box">
-            <code>[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12</code>
-            <button class="mini-copy-btn" onclick="copyCommand('[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12', this)" title="Copy TLS fix">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-            </button>
-          </div>
-
-          <p><strong>Bypass ExecutionPolicy restriction:</strong><br>
-          If PowerShell restricts running unsigned scripts on your machine:</p>
+          <p><span data-i18n="tb.policyBypass">Hoặc chạy trực tiếp với cờ Bypass không cần thay đổi chính sách hệ thống:</span></p>
           <div class="inline-code-box">
             <code>powershell -ExecutionPolicy Bypass -Command "irm https://raw.githubusercontent.com/nguyenquocanhz/BootReport-Health/main/BootReport.ps1 | iex"</code>
             <button class="mini-copy-btn" onclick="copyCommand('powershell -ExecutionPolicy Bypass -Command &quot;irm https://raw.githubusercontent.com/nguyenquocanhz/BootReport-Health/main/BootReport.ps1 | iex&quot;', this)" title="Copy bypass command">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            </button>
+          </div>
+
+          <p><strong data-i18n="tb.ispTitle">Nếu lệnh tải bị nhà mạng (ISP) chặn kết nối GitHub:</strong><br>
+          <span data-i18n="tb.ispDesc">Một số nhà mạng chặn truy cập tên miền raw.githubusercontent.com. Sử dụng lệnh sau để bypass qua Cloudflare DoH (Windows 10/11):</span></p>
+          <div class="inline-code-box">
+            <code>iex (curl.exe -s --doh-url https://1.1.1.1/dns-query https://raw.githubusercontent.com/nguyenquocanhz/BootReport-Health/main/BootReport.ps1 | Out-String)</code>
+            <button class="mini-copy-btn" onclick="copyCommand('iex (curl.exe -s --doh-url https://1.1.1.1/dns-query https://raw.githubusercontent.com/nguyenquocanhz/BootReport-Health/main/BootReport.ps1 | Out-String)', this)" title="Copy DNS bypass">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            </button>
+          </div>
+
+          <p><strong data-i18n="tb.tlsTitle">Lỗi kết nối TLS/SSL (Bản Windows 8.1 hoặc Windows 10 cũ):</strong><br>
+          <span data-i18n="tb.tlsDesc">Chạy lệnh sau trước khi chạy lệnh chính để kích hoạt giao thức bảo mật TLS 1.2:</span></p>
+          <div class="inline-code-box">
+            <code>[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12</code>
+            <button class="mini-copy-btn" onclick="copyCommand('[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12', this)" title="Copy TLS fix">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
             </button>
           </div>
@@ -1129,10 +1365,10 @@
       <div class="admonition admonition-tip">
         <div class="admonition-title">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-          tip
+          <span data-i18n="ad.tipTitle">Mẹo hay</span>
         </div>
-        <p>
-          The generated HTML report is completely standalone with embedded CSS and offline charts. You can share the file directly with tech support or keep it to track battery health over time.
+        <p data-i18n="ad.tipText">
+          Báo cáo HTML được thiết kế hoàn toàn độc lập với CSS và biểu đồ SVG nhúng sẵn (offline 100%). Bạn có thể chia sẻ trực tiếp file cho kỹ thuật viên hoặc lưu trữ định kỳ để theo dõi độ chai pin và tuổi thọ ổ cứng.
         </p>
       </div>
 
@@ -1140,19 +1376,19 @@
       <div class="admonition admonition-note">
         <div class="admonition-title">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
-          note
+          <span data-i18n="ad.noteTitle">Ghi chú</span>
         </div>
-        <p>
-          The <code>irm</code> command in PowerShell downloads a script from a specified URL, and the <code>iex</code> command executes it. BootReport uses native Windows Diagnostics (WMI, CIM, and Event Logs). It does NOT install background services or modify system files.
+        <p data-i18n="ad.noteText">
+          Lệnh <code>irm</code> tải script từ URL và <code>iex</code> thực thi script. BootReport chỉ đọc dữ liệu chẩn đoán nội bộ của Windows (WMI, CIM, Event Logs). Script TUYỆT ĐỐI KHÔNG cài dịch vụ chạy ngầm, không gửi dữ liệu ra ngoài và không can thiệp hệ điều hành.
         </p>
       </div>
 
       <hr/>
 
       <!-- DIAGNOSTIC MODULES -->
-      <h2 id="features">Diagnostic Modules &amp; Capabilities</h2>
-      <p>
-        BootReport queries Windows subsystem telemetry and hardware management counters directly to diagnose performance bottlenecks and hardware wear without third-party services.
+      <h2 id="features" data-i18n="mod.title">Các Mô-Đun &amp; Tính Năng Chẩn Đoán</h2>
+      <p data-i18n="mod.subtitle">
+        BootReport truy vấn trực tiếp telemetry hệ thống Windows và bộ đếm phần cứng chuyên sâu để chẩn đoán điểm nghẽn hiệu năng và hao mòn linh kiện mà không cần phần mềm bên thứ ba.
       </p>
 
       <!-- MODULE 1: BOOT TIME -->
@@ -1162,12 +1398,12 @@
             <div class="module-icon">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             </div>
-            <h3>Boot Time &amp; Startup Degradation</h3>
+            <h3 data-i18n="mod.bootTitle">Thời Gian Khởi Động &amp; Điểm Nghẽn Tiến Trình</h3>
           </div>
           <span class="module-badge">Event ID 100-109</span>
         </div>
-        <p>
-          Queries <code>Microsoft-Windows-Diagnostics-Performance/Operational</code> to record exact boot timeline phases down to milliseconds:
+        <p data-i18n="mod.bootDesc1">
+          Truy vấn <code>Microsoft-Windows-Diagnostics-Performance/Operational</code> để bóc tách chi tiết từng mốc thời gian boot tới mili-giây:
         </p>
         <div class="metric-tags">
           <span class="tag">MainPathBootTime</span>
@@ -1175,8 +1411,8 @@
           <span class="tag">BootDriversInitTime</span>
           <span class="tag">UserLogonWaitTime</span>
         </div>
-        <p class="module-desc">
-          Detects startup degradation caused by sluggish applications (Event ID 101), driver delays (Event ID 102), and service stalls (Event ID 103). Flags reboots exceeding the 30-second SSD threshold.
+        <p class="module-desc" data-i18n="mod.bootDesc2">
+          Tự động phát hiện ứng dụng làm chậm (Event ID 101), driver tải chậm (Event ID 102) và dịch vụ hệ thống bị nghẽn (Event ID 103). Đánh dấu cảnh báo nếu thời gian boot vượt quá 30 giây đối với ổ SSD.
         </p>
       </div>
 
@@ -1187,21 +1423,21 @@
             <div class="module-icon">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="16" height="10" rx="2" ry="2"/><line x1="21" y1="11" x2="21" y2="13"/></svg>
             </div>
-            <h3>Battery Wear &amp; Cycle Count</h3>
+            <h3 data-i18n="mod.batteryTitle">Độ Chai Pin &amp; Số Chu Kỳ Sạc</h3>
           </div>
           <span class="module-badge">WMI / PowerCfg</span>
         </div>
-        <p>
-          Extracts internal battery controller telemetry via native CIM and Powercfg records:
+        <p data-i18n="mod.batteryDesc1">
+          Trích xuất thông số điều khiển pin thông qua CIM và báo cáo PowerCfg nội bộ:
         </p>
         <div class="metric-tags">
-          <span class="tag">Design Capacity (mWh)</span>
-          <span class="tag">Full Charge Capacity</span>
-          <span class="tag">Cycle Count</span>
-          <span class="tag">Wear Percentage</span>
+          <span class="tag" data-i18n="tag.designCap">Dung lượng thiết kế (mWh)</span>
+          <span class="tag" data-i18n="tag.fullCap">Dung lượng sạc tối đa</span>
+          <span class="tag" data-i18n="tag.cycles">Chu kỳ sạc (Cycle Count)</span>
+          <span class="tag" data-i18n="tag.wear">Tỷ lệ chai pin (%)</span>
         </div>
-        <p class="module-desc">
-          Measures permanent cell degradation: <code>Wear = (1 - FullCharge / Design) * 100%</code>. Triggers a maintenance warning when wear exceeds 25% or charge cycles exceed 500 loops.
+        <p class="module-desc" data-i18n="mod.batteryDesc2">
+          Đo lường mức độ hao mòn vĩnh viễn của cell pin: <code>Độ chai = (1 - Sạc tối đa / Thiết kế) * 100%</code>. Cảnh báo bảo dưỡng khi độ chai vượt quá 25% hoặc chu kỳ sạc vượt mốc 500 lần.
         </p>
       </div>
 
@@ -1212,21 +1448,21 @@
             <div class="module-icon">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="12" x2="2" y2="12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
             </div>
-            <h3>SSD &amp; NVMe SMART Health</h3>
+            <h3 data-i18n="mod.ssdTitle">Sức Khỏe Ổ Cứng SSD &amp; NVMe SMART</h3>
           </div>
           <span class="module-badge">MSFT_PhysicalDisk</span>
         </div>
-        <p>
-          Queries Storage Reliability Counters directly from the NVMe/SATA controller:
+        <p data-i18n="mod.ssdDesc1">
+          Truy vấn trực tiếp bộ đếm độ tin cậy từ chip điều khiển NVMe/SATA qua MSFT_PhysicalDisk:
         </p>
         <div class="metric-tags">
-          <span class="tag">Operational Status</span>
-          <span class="tag">Wear Percentage</span>
-          <span class="tag">Drive Temperature</span>
+          <span class="tag" data-i18n="tag.opStatus">Trạng thái vận hành</span>
+          <span class="tag" data-i18n="tag.ssdWear">Tỷ lệ hao mòn ô nhớ</span>
+          <span class="tag" data-i18n="tag.driveTemp">Nhiệt độ ổ đĩa (°C)</span>
           <span class="tag">NTFS Event 55</span>
         </div>
-        <p class="module-desc">
-          Monitors remaining flash endurance, operational heat (throttling threshold &gt; 55°C), read/write error counters, and inspects the System log for NTFS block corruption warnings.
+        <p class="module-desc" data-i18n="mod.ssdDesc2">
+          Theo dõi tuổi thọ ô nhớ flash còn lại, nhiệt độ hoạt động (cảnh báo hạ tốc độ khi &gt; 55°C), bộ đếm lỗi đọc/ghi và rà soát cảnh báo lỗi phân vùng NTFS (Event ID 55).
         </p>
       </div>
 
@@ -1237,67 +1473,67 @@
             <div class="module-icon">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
             </div>
-            <h3>Crash &amp; Sudden Power Loss Tracking</h3>
+            <h3 data-i18n="mod.crashesTitle">Lịch Sử Sập Nguồn &amp; Lỗi Màn Hình Xanh (BSOD)</h3>
           </div>
           <span class="module-badge">Kernel-Power 41 / BSOD</span>
         </div>
-        <p>
-          Scans the Windows System Event Log across the past 30 to 60 days:
+        <p data-i18n="mod.crashesDesc1">
+          Rà soát Windows System Event Log trong 30 đến 60 ngày gần nhất:
         </p>
         <div class="metric-tags">
-          <span class="tag">Kernel-Power 41 (Reboot)</span>
+          <span class="tag">Kernel-Power 41 (Sập nguồn)</span>
           <span class="tag">BugCheck 1001 (BSOD)</span>
-          <span class="tag">WHEA-Logger (Hardware)</span>
+          <span class="tag">WHEA-Logger (Phần cứng)</span>
           <span class="tag">MiniDump Verification</span>
         </div>
-        <p class="module-desc">
-          Catches unexpected power failures, PSU brownouts, WHEA CPU/PCIe bus exceptions, and blue-screen crashes with exact timestamps and hex stop codes.
+        <p class="module-desc" data-i18n="mod.crashesDesc2">
+          Phát hiện sự cố mất nguồn đột ngột, sụt áp PSU, lỗi xung đột vi xử lý/bus PCIe (WHEA) và lỗi màn hình xanh (BSOD) với mốc thời gian chi tiết cùng mã dừng (stop code) dạng hex.
         </p>
       </div>
 
       <hr/>
 
       <!-- DIAGNOSTICS SUMMARY TABLE -->
-      <h2 id="diagnostics-summary">Diagnostics Summary</h2>
+      <h2 id="diagnostics-summary" data-i18n="tbl.title">Bảng Tổng Hợp Chỉ Số Chẩn Đoán</h2>
       <table>
         <thead>
           <tr>
-            <th>Module</th>
-            <th>Target Metrics</th>
-            <th>Normal Threshold</th>
-            <th>Alert Indicator</th>
+            <th data-i18n="tbl.colModule">Mô-đun</th>
+            <th data-i18n="tbl.colMetrics">Chỉ số theo dõi</th>
+            <th data-i18n="tbl.colNormal">Ngưỡng bình thường</th>
+            <th data-i18n="tbl.colAlert">Dấu hiệu cảnh báo</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td><strong>Boot Time</strong></td>
-            <td>Event ID 100 MainPath, Kernel, Drivers</td>
+            <td><strong data-i18n="tbl.rowBoot">Thời gian khởi động</strong></td>
+            <td data-i18n="tbl.rowBootMet">Event ID 100 MainPath, Kernel, Drivers</td>
             <td>&lt; 30s (SSD / NVMe)</td>
-            <td>&gt; 60s, apps/drivers causing slowdown (ID 101-109)</td>
+            <td data-i18n="tbl.rowBootAlert">&gt; 60s, app/driver gây chậm (ID 101-109)</td>
           </tr>
           <tr>
-            <td><strong>Laptop Battery</strong></td>
-            <td>Design vs Full Capacity, Cycle Count</td>
-            <td>Wear &lt; 15%</td>
-            <td>Wear &gt; 25%, cycles &gt; 500, status degraded</td>
+            <td><strong data-i18n="tbl.rowBattery">Pin Laptop</strong></td>
+            <td data-i18n="tbl.rowBatteryMet">Dung lượng thiết kế vs Thực tế, Chu kỳ</td>
+            <td data-i18n="tbl.rowBatteryNorm">Độ chai &lt; 15%</td>
+            <td data-i18n="tbl.rowBatteryAlert">Chai &gt; 25%, chu kỳ &gt; 500, báo thay pin</td>
           </tr>
           <tr>
-            <td><strong>Storage Drive</strong></td>
-            <td>SMART Reliability, Wear, Temp, Errors</td>
-            <td>Wear &lt; 10%, Temp &lt; 55°C</td>
-            <td>Health != Healthy, Wear &gt; 20%, NTFS Event 55</td>
+            <td><strong data-i18n="tbl.rowDrive">Ổ cứng SSD/NVMe</strong></td>
+            <td data-i18n="tbl.rowDriveMet">SMART Reliability, Độ mòn, Nhiệt độ, Lỗi</td>
+            <td data-i18n="tbl.rowDriveNorm">Mòn &lt; 10%, Nhiệt độ &lt; 55°C</td>
+            <td data-i18n="tbl.rowDriveAlert">Khác Healthy, Mòn &gt; 20%, NTFS Event 55</td>
           </tr>
           <tr>
-            <td><strong>Memory (RAM)</strong></td>
-            <td>Visible Memory, Clock Speed, Module Slots</td>
-            <td>Free &gt; 20%</td>
-            <td>Single-channel configuration, speed below rated XMP</td>
+            <td><strong data-i18n="tbl.rowRam">Bộ nhớ (RAM)</strong></td>
+            <td data-i18n="tbl.rowRamMet">Dung lượng khả dụng, Tốc độ Bus, Số khe</td>
+            <td data-i18n="tbl.rowRamNorm">Trống &gt; 20%</td>
+            <td data-i18n="tbl.rowRamAlert">Chạy Single-channel, xung thấp hơn XMP</td>
           </tr>
           <tr>
-            <td><strong>System Crashes</strong></td>
+            <td><strong data-i18n="tbl.rowCrash">Sự cố hệ thống</strong></td>
             <td>Kernel-Power 41, WHEA, BugCheck 1001 (BSOD)</td>
-            <td>0 incidents in 30 days</td>
-            <td>Any sudden reboot or hardware logger exception</td>
+            <td data-i18n="tbl.rowCrashNorm">0 sự cố trong 30 ngày</td>
+            <td data-i18n="tbl.rowCrashAlert">Bất kỳ lần sập nguồn đột ngột hoặc lỗi WHEA</td>
           </tr>
         </tbody>
       </table>
@@ -1305,7 +1541,7 @@
       <hr/>
 
       <!-- INTERACTIVE TERMINAL SIMULATOR WITH ANIMATED LOG STREAM -->
-      <h2 id="terminal-preview">Live Terminal Output Simulator</h2>
+      <h2 id="terminal-preview" data-i18n="sim.title">Mô Phỏng Trực Quan Quá Trình Chạy Terminal</h2>
       <div class="screenshot-window">
         <div class="screenshot-titlebar">
           <div class="window-dots">
@@ -1316,57 +1552,160 @@
           <span>Administrator: Windows PowerShell</span>
           <button class="btn-simulate" id="btnSimulateRun" onclick="simulateExecution()">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            <span>Run Simulation</span>
+            <span data-i18n="sim.runBtn">Chạy mô phỏng</span>
           </button>
         </div>
         <div class="screenshot-body" id="terminalOutput">
           <div class="log-line show"><span class="log-cyan">PS C:\WINDOWS\system32&gt;</span> irm https://raw.githubusercontent.com/nguyenquocanhz/BootReport-Health/main/BootReport.ps1 | iex<span class="cursor-blink" id="termCursor"></span></div>
-          <div class="log-line show log-muted mt-2">[i] Dang thu thap thong tin pin, o dia, RAM, su kien he thong...</div>
-          <div class="log-line show">[+] Da quet thanh cong 18 lan khoi dong trong 60 ngay qua</div>
-          <div class="log-line show">[+] Boot Time TB: <span class="log-green">14.8 giay</span> (BIOS: 3.2s, Kernel: 2.1s, Drivers: 4.5s)</div>
-          <div class="log-line show">[+] Pin: Dung luong <span class="log-green">52.400 / 56.000 mWh</span> (Chai 6.4%, 142 chu ky)</div>
-          <div class="log-line show">[+] SSD: Samsung 980 Pro 1TB (Health: <span class="log-green">Good</span>, Do mon: 3%, Nhiet do: 42°C)</div>
-          <div class="log-line show">[+] Su kien loi: <span class="log-green">0</span> lan sap nguon (Kernel-Power 41), <span class="log-green">0</span> loi BSOD</div>
-          <div class="log-line show log-green mt-2">[✓] Da xuat bao cao: C:\Users\ACER\Desktop\BootReport.html</div>
-          <div class="log-line show log-muted">[i] Dang tu dong mo bao cao tren trinh duyet mac dinh...</div>
+          <div class="log-line show log-muted mt-2">[i] Đang thu thập thông tin pin, ổ đĩa, RAM, sự kiện hệ thống...</div>
+          <div class="log-line show">[+] Đã quét thành công 18 lần khởi động trong 60 ngày qua</div>
+          <div class="log-line show">[+] Boot Time TB: <span class="log-green">14.8 giây</span> (BIOS: 3.2s, Kernel: 2.1s, Drivers: 4.5s)</div>
+          <div class="log-line show">[+] Pin: Dung lượng <span class="log-green">52.400 / 56.000 mWh</span> (Chai 6.4%, 142 chu kỳ)</div>
+          <div class="log-line show">[+] SSD: Samsung 980 Pro 1TB (Health: <span class="log-green">Good</span>, Độ mòn: 3%, Nhiệt độ: 42°C)</div>
+          <div class="log-line show">[+] Sự kiện lỗi: <span class="log-green">0</span> lần sập nguồn (Kernel-Power 41), <span class="log-green">0</span> lỗi BSOD</div>
+          <div class="log-line show log-green mt-2">[✓] Đã xuất báo cáo: C:\Users\ACER\Desktop\BootReport.html</div>
+          <div class="log-line show log-muted">[i] Đang tự động mở báo cáo trên trình duyệt mặc định...</div>
         </div>
       </div>
 
       <hr/>
 
+      <!-- QR DONATE SECTION -->
+      <section id="donate">
+        <div class="donate-card">
+          <div class="donate-header">
+            <div class="donate-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            </div>
+            <div>
+              <h3 data-i18n="donate.title">Ủng Hộ Tác Giả &amp; Dự Án (Donate)</h3>
+              <p class="donate-message" style="margin:0;" data-i18n="donate.subtitle">
+                BootReport là phần mềm mã nguồn mở hoàn toàn miễn phí. Sự ủng hộ của bạn là nguồn động lực to lớn giúp tác giả duy trì và phát triển thêm nhiều tính năng mới!
+              </p>
+            </div>
+          </div>
+
+          <div class="donate-grid">
+            <!-- Left: QR Code Box -->
+            <div class="donate-qr-box">
+              <img id="donateQrImg" class="donate-qr-img" src="https://api.vietqr.io/image/970422-0941813157-compact2.png?amount=20000&addInfo=BootReport%20Donate&accountName=NGUYEN%20QUOC%20ANH" alt="VietQR MBBank 0941813157">
+              <div class="donate-qr-sub">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>VietQR • Napas247 • MBBank</span>
+              </div>
+            </div>
+
+            <!-- Right: Details & Presets -->
+            <div class="donate-details">
+              <div>
+                <div class="donate-presets-label" data-i18n="donate.quickSelect">Chọn nhanh mức ủng hộ:</div>
+                <div class="donate-presets">
+                  <button class="preset-btn active" onclick="setDonateAmount(20000, this)">
+                    <span>☕ 20.000đ</span>
+                    <small style="opacity:0.75;" data-i18n="donate.coffee">(Cà phê)</small>
+                  </button>
+                  <button class="preset-btn" onclick="setDonateAmount(50000, this)">
+                    <span>🥐 50.000đ</span>
+                    <small style="opacity:0.75;" data-i18n="donate.breakfast">(Bữa sáng)</small>
+                  </button>
+                  <button class="preset-btn" onclick="setDonateAmount(100000, this)">
+                    <span>🔥 100.000đ</span>
+                    <small style="opacity:0.75;" data-i18n="donate.energy">(Tiếp lửa)</small>
+                  </button>
+                  <button class="preset-btn" onclick="setDonateAmount(0, this)">
+                    <span>💖 <span data-i18n="donate.custom">Tùy tâm</span></span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Bank details box -->
+              <div class="bank-info-box">
+                <div class="bank-info-row">
+                  <span class="bank-info-label">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    <span data-i18n="donate.bank">Ngân hàng:</span>
+                  </span>
+                  <span class="bank-info-value">MBBank (Quân Đội)</span>
+                </div>
+                <div class="bank-info-row">
+                  <span class="bank-info-label">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    <span data-i18n="donate.accHolder">Chủ tài khoản:</span>
+                  </span>
+                  <span class="bank-info-value">NGUYEN QUOC ANH</span>
+                </div>
+                <div class="bank-info-row">
+                  <span class="bank-info-label">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/></svg>
+                    <span data-i18n="donate.accNumber">Số tài khoản:</span>
+                  </span>
+                  <span class="bank-info-value">
+                    <span>0941813157</span>
+                    <button class="btn-copy-info" onclick="copyBankInfo('0941813157', this, 'Số tài khoản')">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                      <span data-i18n="donate.copy">Sao chép</span>
+                    </button>
+                  </span>
+                </div>
+                <div class="bank-info-row">
+                  <span class="bank-info-label">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    <span data-i18n="donate.memo">Nội dung CK:</span>
+                  </span>
+                  <span class="bank-info-value">
+                    <span>BootReport Donate</span>
+                    <button class="btn-copy-info" onclick="copyBankInfo('BootReport Donate', this, 'Nội dung chuyển khoản')">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                      <span data-i18n="donate.copy">Sao chép</span>
+                    </button>
+                  </span>
+                </div>
+              </div>
+
+              <div class="donate-message" data-i18n="donate.thankYou">
+                🙏 Chân thành cảm ơn mọi sự ủng hộ của bạn! Mọi khoản donate dù nhỏ hay lớn đều được trân trọng và dùng để tiếp tục cải tiến các tính năng chẩn đoán phần cứng cho cộng đồng.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr/>
+
       <!-- LATEST RELEASE -->
-      <h2 id="latest-release">BootReport Latest Release &amp; Notes</h2>
-      <p>
-        Current Stable: <strong>v2.4 (2026 Edition)</strong> — Built with pure Windows PowerShell, CIM, and native Event Tracing.
+      <h2 id="latest-release" data-i18n="rel.title">Phiên Bản Mới Nhất &amp; Ghi Chú Phát Hành</h2>
+      <p data-i18n="rel.version">
+        Bản ổn định hiện tại: <strong>v2.4 (Phiên bản 2026)</strong> — Xây dựng bằng pure PowerShell, CIM và Event Tracing nguyên bản của Windows.
       </p>
       <ul>
-        <li><strong>Zero Dependencies:</strong> Runs out-of-the-box on Windows 11, Windows 10, and Windows 8.1 without external packages.</li>
-        <li><strong>Safe &amp; Non-Invasive:</strong> Read-only hardware telemetry. Does NOT modify registry settings or install background services.</li>
-        <li><strong>Offline-Ready:</strong> Report output is self-contained with inline CSS and lightweight SVG charts that open directly in any browser.</li>
+        <li data-i18n="rel.zeroDep"><strong>Không phụ thuộc:</strong> Chạy mượt mà trên Windows 11, Windows 10 và Windows 8.1 không cần cài thêm gói bổ trợ.</li>
+        <li data-i18n="rel.safe"><strong>An toàn &amp; Không can thiệp:</strong> Chỉ đọc dữ liệu phần cứng, KHÔNG sửa đổi registry và KHÔNG cài tiến trình chạy ngầm.</li>
+        <li data-i18n="rel.offline"><strong>Sẵn sàng Offline:</strong> Báo cáo tự chứa CSS và biểu đồ SVG nhúng sẵn, mở mượt mà trên mọi trình duyệt mà không cần Internet.</li>
       </ul>
       <p>
-        <a href="https://github.com/nguyenquocanhz/BootReport-Health" target="_blank">GitHub Repository</a> &nbsp;•&nbsp; 
-        <a href="https://raw.githubusercontent.com/nguyenquocanhz/BootReport-Health/main/BootReport.ps1" target="_blank" download>Direct BootReport.ps1 Script</a> &nbsp;•&nbsp; 
-        <a href="#launch-methods">PowerShell One-Liner</a>
+        <a href="https://github.com/nguyenquocanhz/BootReport-Health" target="_blank" data-i18n="rel.github">Kho lưu trữ GitHub</a> &nbsp;•&nbsp; 
+        <a href="https://raw.githubusercontent.com/nguyenquocanhz/BootReport-Health/main/BootReport.ps1" target="_blank" download data-i18n="rel.directScript">Tải trực tiếp BootReport.ps1</a> &nbsp;•&nbsp; 
+        <a href="#launch-methods" data-i18n="rel.oneLiner">Lệnh chạy 1 dòng PowerShell</a>
       </p>
 
     </main>
 
     <!-- RIGHT TABLE OF CONTENTS -->
     <aside class="docs-toc">
-      <div class="toc-title">On this page</div>
+      <div class="toc-title" data-i18n="toc.title">Mục lục trang</div>
       <ul class="toc-list">
-        <li><a href="#launch-methods" id="toc-launch-methods">Launch Methods</a></li>
-        <li><a href="#troubleshoot" id="toc-troubleshoot">Troubleshoot &amp; Bypass</a></li>
-        <li class="toc-heading">Diagnostic Modules</li>
-        <li><a href="#boot-time" id="toc-boot-time">Boot Time Analysis</a></li>
-        <li><a href="#battery-health" id="toc-battery-health">Battery &amp; Cycles</a></li>
-        <li><a href="#ssd-smart" id="toc-ssd-smart">SSD / NVMe SMART</a></li>
-        <li><a href="#system-crashes" id="toc-system-crashes">Crash &amp; Kernel Events</a></li>
-        <li class="toc-heading">Overview &amp; Tools</li>
-        <li><a href="#diagnostics-summary" id="toc-summary">Diagnostics Summary</a></li>
-        <li><a href="#terminal-preview" id="toc-terminal">Terminal Simulator</a></li>
-        <li><a href="#latest-release" id="toc-release">Latest Release &amp; Notes</a></li>
+        <li><a href="#launch-methods" id="toc-launch-methods" data-i18n="toc.launch">Phương thức khởi chạy</a></li>
+        <li><a href="#troubleshoot" id="toc-troubleshoot" data-i18n="toc.troubleshoot">Xử lý sự cố &amp; Bỏ chặn</a></li>
+        <li class="toc-heading" data-i18n="sb.headingModules">CÁC MÔ-ĐUN CHẨN ĐOÁN</li>
+        <li><a href="#boot-time" id="toc-boot-time" data-i18n="toc.bootTime">Thời gian khởi động</a></li>
+        <li><a href="#battery-health" id="toc-battery-health" data-i18n="toc.battery">Sức khỏe &amp; Chu kỳ Pin</a></li>
+        <li><a href="#ssd-smart" id="toc-ssd-smart" data-i18n="toc.ssd">Sức khỏe SSD SMART</a></li>
+        <li><a href="#system-crashes" id="toc-system-crashes" data-i18n="toc.crashes">Sự cố &amp; Sập nguồn Kernel</a></li>
+        <li class="toc-heading" data-i18n="sb.headingTools">TỔNG QUAN &amp; CÔNG CỤ</li>
+        <li><a href="#diagnostics-summary" id="toc-summary" data-i18n="toc.summary">Bảng tổng hợp chỉ số</a></li>
+        <li><a href="#terminal-preview" id="toc-terminal" data-i18n="toc.terminal">Mô phỏng Terminal</a></li>
+        <li><a href="#donate" id="toc-donate" data-i18n="toc.donate">💖 Ủng hộ (Donate)</a></li>
+        <li><a href="#latest-release" id="toc-release" data-i18n="toc.release">Phiên bản mới &amp; Ghi chú</a></li>
       </ul>
     </aside>
   </div>
@@ -1375,6 +1714,326 @@
   <div class="toast-container" id="toastContainer"></div>
 
   <script>
+    /* ================================================================ */
+    /* MULTILINGUAL I18N DICTIONARY (VI / EN)                           */
+    /* ================================================================ */
+    const i18nData = {
+      vi: {
+        pageTitle: "Báo Cáo Sức Khỏe & Tốc Độ Khởi Động Windows | BootReport",
+        pageDesc: "Công cụ mã nguồn mở kiểm tra toàn diện hiệu năng khởi động, độ chai pin laptop, tuổi thọ SSD/NVMe SMART và tra cứu lịch sử lỗi màn hình xanh (BSOD) trên Windows.",
+        "nav.home": "Trang chủ",
+        "nav.download": "Tải Script",
+        "nav.metrics": "Chỉ số",
+        "nav.troubleshoot": "Sự cố",
+        "nav.donate": "Ủng hộ",
+        "sb.checkHealth": "Kiểm tra sức khỏe Windows",
+        "sb.download": "Tải Script (.ps1)",
+        "sb.troubleshoot": "Xử lý sự cố & Bỏ chặn",
+        "sb.headingModules": "CÁC MÔ-ĐUN CHẨN ĐOÁN",
+        "sb.bootTime": "Phân tích thời gian khởi động",
+        "sb.battery": "Sức khỏe & Chu kỳ Pin",
+        "sb.ssdSmart": "Sức khỏe SSD / NVMe SMART",
+        "sb.crashes": "Sự cố & Sập nguồn Kernel",
+        "sb.headingTools": "TỔNG QUAN & CÔNG CỤ",
+        "sb.summary": "Bảng tổng hợp chỉ số",
+        "sb.terminal": "Mô phỏng Terminal",
+        "sb.donate": "Ủng hộ tác giả (Donate)",
+        "sb.release": "Phiên bản mới & Ghi chú",
+        "hero.breadcrumb": "Báo cáo sức khỏe & tốc độ khởi động Windows",
+        "hero.title": "Windows Boot & System Health Report (BootReport)",
+        "hero.subtitle": "Công cụ mã nguồn mở chẩn đoán phần cứng và tốc độ khởi động Windows: phân tích các giai đoạn boot, đo độ chai pin laptop, kiểm tra sức khỏe SSD/NVMe SMART và tra cứu lịch sử lỗi màn hình xanh (BSOD).",
+        "launch.title": "Phương Thức Khởi Chạy",
+        "launch.tab1": "Cách 1: PowerShell (Khuyến nghị)",
+        "launch.tab2": "Cách 2: Truyền thống (Offline)",
+        "launch.tab1Desc": "Cách nhanh nhất, tiện lợi nhất, chạy tốt trên Windows 8.1, 10 và 11.",
+        "launch.tab1Step1": "Mở Start Menu, gõ <strong>PowerShell</strong> (hoặc chuột phải nút Start chọn <strong>Terminal / PowerShell</strong>).",
+        "launch.tab1Step2": "Sao chép và dán dòng lệnh bên dưới rồi nhấn <strong>Enter</strong>:",
+        "launch.launcherTag": "PowerShell (Khuyến nghị Administrator)",
+        "launch.launcherSub": "Khởi chạy 1 dòng lệnh",
+        "launch.tab1Step3": "Khi xuất hiện hộp thoại UAC hỏi cấp quyền, chọn <strong>Yes</strong> để cấp quyền Administrator giúp script đọc log phần cứng.",
+        "launch.tab1Step4": "Script sẽ tự động quét thông số và mở báo cáo <strong>BootReport.html</strong> trực quan ngay trên Desktop của bạn!",
+        "launch.tab2Desc": "Sử dụng cách này nếu bạn muốn tải file về máy hoặc máy không có kết nối Internet.",
+        "launch.tab2Step1": "Tải script:",
+        "launch.filePs1": "File PowerShell gốc",
+        "launch.fileZip": "Gói nén zip đầy đủ",
+        "launch.tab2Step2": "Chuột phải vào Start Menu &gt; Chọn <strong>Windows Terminal (Admin)</strong> hoặc <strong>PowerShell (Run as Administrator)</strong>.",
+        "launch.tab2Step3": "Chạy lệnh:",
+        "launch.tab2Step4": "Các tham số tùy chọn:",
+        "launch.paramDays": "<code>-Days 30</code>: Quét 30 ngày gần nhất (mặc định 60 ngày).",
+        "launch.paramOut": "<code>-Out \"D:\\Report.html\"</code>: Lưu vào đường dẫn tùy chỉnh thay vì Desktop.",
+        "launch.paramLang": "<code>-Lang vi</code> hoặc <code>-Lang en</code>: Chọn ngôn ngữ hiển thị báo cáo.",
+        "launch.paramNoOpen": "<code>-NoOpen</code>: Chỉ xuất file, không tự động mở trình duyệt.",
+        "tb.summary": "Gặp sự cố? (Bị chặn mạng, lỗi Policy Windows 11 hoặc Windows cũ)",
+        "tb.policyTitle": "Lỗi chính sách bảo mật (ExecutionPolicy) trên Windows 11 mới cài:",
+        "tb.policyDesc": "Nếu PowerShell báo lỗi <em>\"running scripts is disabled on this system\"</em>, chạy lệnh sau để mở quyền chạy script:",
+        "tb.policyBypass": "Hoặc chạy trực tiếp với cờ Bypass không cần thay đổi chính sách hệ thống:",
+        "tb.ispTitle": "Nếu lệnh tải bị nhà mạng (ISP) chặn kết nối GitHub:",
+        "tb.ispDesc": "Một số nhà mạng chặn truy cập tên miền raw.githubusercontent.com. Sử dụng lệnh sau để bypass qua Cloudflare DoH (Windows 10/11):",
+        "tb.tlsTitle": "Lỗi kết nối TLS/SSL (Bản Windows 8.1 hoặc Windows 10 cũ):",
+        "tb.tlsDesc": "Chạy lệnh sau trước khi chạy lệnh chính để kích hoạt giao thức bảo mật TLS 1.2:",
+        "ad.tipTitle": "Mẹo hay",
+        "ad.tipText": "Báo cáo HTML được thiết kế hoàn toàn độc lập với CSS và biểu đồ SVG nhúng sẵn (offline 100%). Bạn có thể chia sẻ trực tiếp file cho kỹ thuật viên hoặc lưu trữ định kỳ để theo dõi độ chai pin và tuổi thọ ổ cứng.",
+        "ad.noteTitle": "Ghi chú",
+        "ad.noteText": "Lệnh <code>irm</code> tải script từ URL và <code>iex</code> thực thi script. BootReport chỉ đọc dữ liệu chẩn đoán nội bộ của Windows (WMI, CIM, Event Logs). Script TUYỆT ĐỐI KHÔNG cài dịch vụ chạy ngầm, không gửi dữ liệu ra ngoài và không can thiệp hệ điều hành.",
+        "mod.title": "Các Mô-Đun &amp; Tính Năng Chẩn Đoán",
+        "mod.subtitle": "BootReport truy vấn trực tiếp telemetry hệ thống Windows và bộ đếm phần cứng chuyên sâu để chẩn đoán điểm nghẽn hiệu năng và hao mòn linh kiện mà không cần phần mềm bên thứ ba.",
+        "mod.bootTitle": "Thời Gian Khởi Động &amp; Điểm Nghẽn Tiến Trình",
+        "mod.bootDesc1": "Truy vấn <code>Microsoft-Windows-Diagnostics-Performance/Operational</code> để bóc tách chi tiết từng mốc thời gian boot tới mili-giây:",
+        "mod.bootDesc2": "Tự động phát hiện ứng dụng làm chậm (Event ID 101), driver tải chậm (Event ID 102) và dịch vụ hệ thống bị nghẽn (Event ID 103). Đánh dấu cảnh báo nếu thời gian boot vượt quá 30 giây đối với ổ SSD.",
+        "mod.batteryTitle": "Độ Chai Pin &amp; Số Chu Kỳ Sạc",
+        "mod.batteryDesc1": "Trích xuất thông số điều khiển pin thông qua CIM và báo cáo PowerCfg nội bộ:",
+        "tag.designCap": "Dung lượng thiết kế (mWh)",
+        "tag.fullCap": "Dung lượng sạc tối đa",
+        "tag.cycles": "Chu kỳ sạc (Cycle Count)",
+        "tag.wear": "Tỷ lệ chai pin (%)",
+        "mod.batteryDesc2": "Đo lường mức độ hao mòn vĩnh viễn của cell pin: <code>Độ chai = (1 - Sạc tối đa / Thiết kế) * 100%</code>. Cảnh báo bảo dưỡng khi độ chai vượt quá 25% hoặc chu kỳ sạc vượt mốc 500 lần.",
+        "mod.ssdTitle": "Sức Khỏe Ổ Cứng SSD &amp; NVMe SMART",
+        "mod.ssdDesc1": "Truy vấn trực tiếp bộ đếm độ tin cậy từ chip điều khiển NVMe/SATA qua MSFT_PhysicalDisk:",
+        "tag.opStatus": "Trạng thái vận hành",
+        "tag.ssdWear": "Tỷ lệ hao mòn ô nhớ",
+        "tag.driveTemp": "Nhiệt độ ổ đĩa (°C)",
+        "mod.ssdDesc2": "Theo dõi tuổi thọ ô nhớ flash còn lại, nhiệt độ hoạt động (cảnh báo hạ tốc độ khi &gt; 55°C), bộ đếm lỗi đọc/ghi và rà soát cảnh báo lỗi phân vùng NTFS (Event ID 55).",
+        "mod.crashesTitle": "Lịch Sử Sập Nguồn &amp; Lỗi Màn Hình Xanh (BSOD)",
+        "mod.crashesDesc1": "Rà soát Windows System Event Log trong 30 đến 60 ngày gần nhất:",
+        "mod.crashesDesc2": "Phát hiện sự cố mất nguồn đột ngột, sụt áp PSU, lỗi xung đột vi xử lý/bus PCIe (WHEA) và lỗi màn hình xanh (BSOD) với mốc thời gian chi tiết cùng mã dừng (stop code) dạng hex.",
+        "tbl.title": "Bảng Tổng Hợp Chỉ Số Chẩn Đoán",
+        "tbl.colModule": "Mô-đun",
+        "tbl.colMetrics": "Chỉ số theo dõi",
+        "tbl.colNormal": "Ngưỡng bình thường",
+        "tbl.colAlert": "Dấu hiệu cảnh báo",
+        "tbl.rowBoot": "Thời gian khởi động",
+        "tbl.rowBootMet": "Event ID 100 MainPath, Kernel, Drivers",
+        "tbl.rowBootAlert": "&gt; 60s, app/driver gây chậm (ID 101-109)",
+        "tbl.rowBattery": "Pin Laptop",
+        "tbl.rowBatteryMet": "Dung lượng thiết kế vs Thực tế, Chu kỳ",
+        "tbl.rowBatteryNorm": "Độ chai &lt; 15%",
+        "tbl.rowBatteryAlert": "Chai &gt; 25%, chu kỳ &gt; 500, báo thay pin",
+        "tbl.rowDrive": "Ổ cứng SSD/NVMe",
+        "tbl.rowDriveMet": "SMART Reliability, Độ mòn, Nhiệt độ, Lỗi",
+        "tbl.rowDriveNorm": "Mòn &lt; 10%, Nhiệt độ &lt; 55°C",
+        "tbl.rowDriveAlert": "Khác Healthy, Mòn &gt; 20%, NTFS Event 55",
+        "tbl.rowRam": "Bộ nhớ (RAM)",
+        "tbl.rowRamMet": "Dung lượng khả dụng, Tốc độ Bus, Số khe",
+        "tbl.rowRamNorm": "Trống &gt; 20%",
+        "tbl.rowRamAlert": "Chạy Single-channel, xung thấp hơn XMP",
+        "tbl.rowCrash": "Sự cố hệ thống",
+        "tbl.rowCrashNorm": "0 sự cố trong 30 ngày",
+        "tbl.rowCrashAlert": "Bất kỳ lần sập nguồn đột ngột hoặc lỗi WHEA",
+        "sim.title": "Mô Phỏng Trực Quan Quá Trình Chạy Terminal",
+        "sim.runBtn": "Chạy mô phỏng",
+        "donate.title": "Ủng Hộ Tác Giả &amp; Dự Án (Donate)",
+        "donate.subtitle": "BootReport là phần mềm mã nguồn mở hoàn toàn miễn phí. Sự ủng hộ của bạn là nguồn động lực to lớn giúp tác giả duy trì và phát triển thêm nhiều tính năng mới!",
+        "donate.quickSelect": "Chọn nhanh mức ủng hộ:",
+        "donate.coffee": "(Cà phê)",
+        "donate.breakfast": "(Bữa sáng)",
+        "donate.energy": "(Tiếp lửa)",
+        "donate.custom": "Tùy tâm",
+        "donate.bank": "Ngân hàng:",
+        "donate.accHolder": "Chủ tài khoản:",
+        "donate.accNumber": "Số tài khoản:",
+        "donate.memo": "Nội dung CK:",
+        "donate.copy": "Sao chép",
+        "donate.thankYou": "🙏 Chân thành cảm ơn mọi sự ủng hộ của bạn! Mọi khoản donate dù nhỏ hay lớn đều được trân trọng và dùng để tiếp tục cải tiến các tính năng chẩn đoán phần cứng cho cộng đồng.",
+        "rel.title": "Phiên Bản Mới Nhất &amp; Ghi Chú Phát Hành",
+        "rel.version": "Bản ổn định hiện tại: <strong>v2.4 (Phiên bản 2026)</strong> — Xây dựng bằng pure PowerShell, CIM và Event Tracing nguyên bản của Windows.",
+        "rel.zeroDep": "<strong>Không phụ thuộc:</strong> Chạy mượt mà trên Windows 11, Windows 10 và Windows 8.1 không cần cài thêm gói bổ trợ.",
+        "rel.safe": "<strong>An toàn &amp; Không can thiệp:</strong> Chỉ đọc dữ liệu phần cứng, KHÔNG sửa đổi registry và KHÔNG cài tiến trình chạy ngầm.",
+        "rel.offline": "<strong>Sẵn sàng Offline:</strong> Báo cáo tự chứa CSS và biểu đồ SVG nhúng sẵn, mở mượt mà trên mọi trình duyệt mà không cần Internet.",
+        "rel.github": "Kho lưu trữ GitHub",
+        "rel.directScript": "Tải trực tiếp BootReport.ps1",
+        "rel.oneLiner": "Lệnh chạy 1 dòng PowerShell",
+        "toc.title": "Mục lục trang",
+        "toc.launch": "Phương thức khởi chạy",
+        "toc.troubleshoot": "Xử lý sự cố &amp; Bỏ chặn",
+        "toc.bootTime": "Thời gian khởi động",
+        "toc.battery": "Sức khỏe &amp; Chu kỳ Pin",
+        "toc.ssd": "Sức khỏe SSD SMART",
+        "toc.crashes": "Sự cố &amp; Sập nguồn Kernel",
+        "toc.summary": "Bảng tổng hợp chỉ số",
+        "toc.terminal": "Mô phỏng Terminal",
+        "toc.donate": "💖 Ủng hộ (Donate)",
+        "toc.release": "Phiên bản mới &amp; Ghi chú",
+        "common.copy": "Sao chép",
+        "common.copied": "Đã chép!"
+      },
+      en: {
+        pageTitle: "Windows Boot & System Health Report | BootReport",
+        pageDesc: "An open-source Windows hardware and boot diagnostic tool featuring Boot Performance breakdown, Battery Health, SSD/NVMe SMART, and System Crash analysis, along with advanced troubleshooting.",
+        "nav.home": "Home",
+        "nav.download": "Download Script",
+        "nav.metrics": "Metrics",
+        "nav.troubleshoot": "Troubleshoot",
+        "nav.donate": "Donate",
+        "sb.checkHealth": "Check Windows Health",
+        "sb.download": "Download Script (.ps1)",
+        "sb.troubleshoot": "Troubleshoot & Bypass",
+        "sb.headingModules": "DIAGNOSTIC MODULES",
+        "sb.bootTime": "Boot Time Analysis",
+        "sb.battery": "Battery & Cycles",
+        "sb.ssdSmart": "SSD / NVMe SMART",
+        "sb.crashes": "Crash & Kernel Events",
+        "sb.headingTools": "OVERVIEW & TOOLS",
+        "sb.summary": "Summary Table",
+        "sb.terminal": "Terminal Simulator",
+        "sb.donate": "Donate & Support",
+        "sb.release": "Latest Release & Notes",
+        "hero.breadcrumb": "Windows Boot & System Health Report",
+        "hero.title": "Windows Boot & System Health Report (BootReport)",
+        "hero.subtitle": "An open-source Windows hardware and boot diagnostic tool featuring Boot Performance breakdown, Battery Health, SSD/NVMe SMART, and System Crash analysis, along with advanced troubleshooting.",
+        "launch.title": "Launch Methods",
+        "launch.tab1": "Method 1: PowerShell (Recommended)",
+        "launch.tab2": "Method 2: Traditional (Offline)",
+        "launch.tab1Desc": "This method is the most convenient and works on Windows 8.1, 10, and 11.",
+        "launch.tab1Step1": "Click the <strong>Start Menu</strong>, type <code>PowerShell</code>, and open it.",
+        "launch.tab1Step2": "Copy and paste the code below and press <strong>Enter.</strong>",
+        "launch.launcherTag": "PowerShell (Administrator recommended)",
+        "launch.launcherSub": "One-line launcher",
+        "launch.tab1Step3": "When prompted by UAC, click <strong>Yes</strong> to grant Administrator permission to collect hardware event logs.",
+        "launch.tab1Step4": "The script will collect all diagnostic metrics and automatically launch your comprehensive <strong>BootReport.html</strong> on your Desktop!",
+        "launch.tab2Desc": "Use this method if you prefer downloading a file or cannot use the PowerShell online method.",
+        "launch.tab2Step1": "Download the script:",
+        "launch.filePs1": "Direct PowerShell script",
+        "launch.fileZip": "Full package archive",
+        "launch.tab2Step2": "Right-click the Start Menu &gt; Select <strong>Windows Terminal (Admin)</strong> or <strong>PowerShell (Run as Administrator)</strong>.",
+        "launch.tab2Step3": "Run the command:",
+        "launch.tab2Step4": "Optional arguments:",
+        "launch.paramDays": "<code>-Days 30</code>: Scan last 30 days instead of default 60.",
+        "launch.paramOut": "<code>-Out \"D:\\Report.html\"</code>: Save to custom path instead of Desktop.",
+        "launch.paramLang": "<code>-Lang vi</code> or <code>-Lang en</code>: Choose language explicitly.",
+        "launch.paramNoOpen": "<code>-NoOpen</code>: Generate file quietly without opening browser.",
+        "tb.summary": "Having trouble? (Blocked by ISP, Policy or Old Windows)",
+        "tb.policyTitle": "Bypass ExecutionPolicy restriction (Windows 11 / 10):",
+        "tb.policyDesc": "If PowerShell restricts running unsigned scripts on your machine (\"running scripts is disabled\"), run this command to allow scripts:",
+        "tb.policyBypass": "Or run directly with the Bypass flag without altering system policies:",
+        "tb.ispTitle": "If the command is blocked by ISP (GitHub blocked):",
+        "tb.ispDesc": "Some ISPs block raw.githubusercontent.com. Use this command to bypass DNS blocks via Cloudflare DoH (Windows 10/11 only):",
+        "tb.tlsTitle": "If you receive a TLS/SSL Error (Older Windows):",
+        "tb.tlsDesc": "If you are on an old build of Windows 8.1 or 10, run this command before the main command:",
+        "ad.tipTitle": "Tip",
+        "ad.tipText": "The generated HTML report is completely standalone with embedded CSS and offline charts. You can share the file directly with tech support or keep it to track battery health over time.",
+        "ad.noteTitle": "Note",
+        "ad.noteText": "The <code>irm</code> command in PowerShell downloads a script from a specified URL, and the <code>iex</code> command executes it. BootReport uses native Windows Diagnostics (WMI, CIM, and Event Logs). It does NOT install background services or modify system files.",
+        "mod.title": "Diagnostic Modules &amp; Capabilities",
+        "mod.subtitle": "BootReport queries Windows subsystem telemetry and hardware management counters directly to diagnose performance bottlenecks and hardware wear without third-party services.",
+        "mod.bootTitle": "Boot Time &amp; Startup Degradation",
+        "mod.bootDesc1": "Queries <code>Microsoft-Windows-Diagnostics-Performance/Operational</code> to record exact boot timeline phases down to milliseconds:",
+        "mod.bootDesc2": "Detects startup degradation caused by sluggish applications (Event ID 101), driver delays (Event ID 102), and service stalls (Event ID 103). Flags reboots exceeding the 30-second SSD threshold.",
+        "mod.batteryTitle": "Battery Wear &amp; Cycle Count",
+        "mod.batteryDesc1": "Extracts internal battery controller telemetry via native CIM and Powercfg records:",
+        "tag.designCap": "Design Capacity (mWh)",
+        "tag.fullCap": "Full Charge Capacity",
+        "tag.cycles": "Cycle Count",
+        "tag.wear": "Wear Percentage",
+        "mod.batteryDesc2": "Measures permanent cell degradation: <code>Wear = (1 - FullCharge / Design) * 100%</code>. Triggers a maintenance warning when wear exceeds 25% or charge cycles exceed 500 loops.",
+        "mod.ssdTitle": "SSD &amp; NVMe SMART Health",
+        "mod.ssdDesc1": "Queries Storage Reliability Counters directly from the NVMe/SATA controller:",
+        "tag.opStatus": "Operational Status",
+        "tag.ssdWear": "Wear Percentage",
+        "tag.driveTemp": "Drive Temperature (°C)",
+        "mod.ssdDesc2": "Monitors remaining flash endurance, operational heat (throttling threshold &gt; 55°C), read/write error counters, and inspects the System log for NTFS block corruption warnings.",
+        "mod.crashesTitle": "Crash &amp; Sudden Power Loss Tracking",
+        "mod.crashesDesc1": "Scans the Windows System Event Log across the past 30 to 60 days:",
+        "mod.crashesDesc2": "Catches unexpected power failures, PSU brownouts, WHEA CPU/PCIe bus exceptions, and blue-screen crashes with exact timestamps and hex stop codes.",
+        "tbl.title": "Diagnostics Summary",
+        "tbl.colModule": "Module",
+        "tbl.colMetrics": "Target Metrics",
+        "tbl.colNormal": "Normal Threshold",
+        "tbl.colAlert": "Alert Indicator",
+        "tbl.rowBoot": "Boot Time",
+        "tbl.rowBootMet": "Event ID 100 MainPath, Kernel, Drivers",
+        "tbl.rowBootAlert": "&gt; 60s, apps/drivers causing slowdown (ID 101-109)",
+        "tbl.rowBattery": "Laptop Battery",
+        "tbl.rowBatteryMet": "Design vs Full Capacity, Cycle Count",
+        "tbl.rowBatteryNorm": "Wear &lt; 15%",
+        "tbl.rowBatteryAlert": "Wear &gt; 25%, cycles &gt; 500, status degraded",
+        "tbl.rowDrive": "Storage Drive",
+        "tbl.rowDriveMet": "SMART Reliability, Wear, Temp, Errors",
+        "tbl.rowDriveNorm": "Wear &lt; 10%, Temp &lt; 55°C",
+        "tbl.rowDriveAlert": "Health != Healthy, Wear &gt; 20%, NTFS Event 55",
+        "tbl.rowRam": "Memory (RAM)",
+        "tbl.rowRamMet": "Visible Memory, Clock Speed, Module Slots",
+        "tbl.rowRamNorm": "Free &gt; 20%",
+        "tbl.rowRamAlert": "Single-channel configuration, speed below rated XMP",
+        "tbl.rowCrash": "System Crashes",
+        "tbl.rowCrashNorm": "0 incidents in 30 days",
+        "tbl.rowCrashAlert": "Any sudden reboot or hardware logger exception",
+        "sim.title": "Live Terminal Output Simulator",
+        "sim.runBtn": "Run Simulation",
+        "donate.title": "Support the Author &amp; Project (Donate)",
+        "donate.subtitle": "BootReport is completely free and open-source. Your support is a huge motivation to maintain and develop more diagnostic features!",
+        "donate.quickSelect": "Select quick amount:",
+        "donate.coffee": "(Coffee)",
+        "donate.breakfast": "(Breakfast)",
+        "donate.energy": "(Fuel)",
+        "donate.custom": "Custom",
+        "donate.bank": "Bank:",
+        "donate.accHolder": "Account Holder:",
+        "donate.accNumber": "Account Number:",
+        "donate.memo": "Memo:",
+        "donate.copy": "Copy",
+        "donate.thankYou": "🙏 Thank you sincerely for your support! Every contribution, big or small, helps us continue improving hardware diagnostics for everyone.",
+        "rel.title": "BootReport Latest Release &amp; Notes",
+        "rel.version": "Current Stable: <strong>v2.4 (2026 Edition)</strong> — Built with pure Windows PowerShell, CIM, and native Event Tracing.",
+        "rel.zeroDep": "<strong>Zero Dependencies:</strong> Runs out-of-the-box on Windows 11, Windows 10, and Windows 8.1 without external packages.",
+        "rel.safe": "<strong>Safe &amp; Non-Invasive:</strong> Read-only hardware telemetry. Does NOT modify registry settings or install background services.",
+        "rel.offline": "<strong>Offline-Ready:</strong> Report output is self-contained with inline CSS and lightweight SVG charts that open directly in any browser.",
+        "rel.github": "GitHub Repository",
+        "rel.directScript": "Direct BootReport.ps1 Script",
+        "rel.oneLiner": "PowerShell One-Liner",
+        "toc.title": "On this page",
+        "toc.launch": "Launch Methods",
+        "toc.troubleshoot": "Troubleshoot &amp; Bypass",
+        "toc.bootTime": "Boot Time Analysis",
+        "toc.battery": "Battery &amp; Cycles",
+        "toc.ssd": "SSD / NVMe SMART",
+        "toc.crashes": "Crash &amp; Kernel Events",
+        "toc.summary": "Diagnostics Summary",
+        "toc.terminal": "Terminal Simulator",
+        "toc.donate": "💖 Donate &amp; Support",
+        "toc.release": "Latest Release &amp; Notes",
+        "common.copy": "Copy",
+        "common.copied": "Copied!"
+      }
+    };
+
+    let currentLang = localStorage.getItem('bootreport_lang') || 'vi';
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem('bootreport_lang', lang);
+      document.documentElement.lang = lang;
+
+      const flag = document.getElementById('langFlag');
+      const label = document.getElementById('langLabel');
+      if (lang === 'vi') {
+        if (flag) flag.textContent = '🇻🇳';
+        if (label) label.textContent = 'Tiếng Việt';
+      } else {
+        if (flag) flag.textContent = '🇬🇧';
+        if (label) label.textContent = 'English';
+      }
+
+      const dict = i18nData[lang];
+      if (!dict) return;
+
+      if (dict.pageTitle) document.title = dict.pageTitle;
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc && dict.pageDesc) metaDesc.setAttribute('content', dict.pageDesc);
+
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key] !== undefined) {
+          el.innerHTML = dict[key];
+        }
+      });
+    }
+
+    function toggleLanguage() {
+      const nextLang = currentLang === 'vi' ? 'en' : 'vi';
+      setLanguage(nextLang);
+      showToast(nextLang === 'vi' ? 'Đã chuyển sang Tiếng Việt' : 'Switched to English');
+    }
+
     // Tab indicator positioning and switching
     const tabs = document.querySelectorAll('.tabs__item');
     const panels = document.querySelectorAll('.tab-panel');
@@ -1400,6 +2059,7 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+      setLanguage(currentLang);
       updateTabIndicator(document.querySelector('.tabs__item--active'));
       initScrollSpy();
     });
@@ -1442,8 +2102,9 @@
         await navigator.clipboard.writeText(text);
         const originalHTML = btn.innerHTML;
         btn.classList.add('copied');
-        btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> <span>Copied!</span>`;
-        showToast('Copied to clipboard! Press Ctrl+V in PowerShell.');
+        const copiedWord = currentLang === 'vi' ? 'Đã chép!' : 'Copied!';
+        btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> <span>${copiedWord}</span>`;
+        showToast(currentLang === 'vi' ? 'Đã sao chép lệnh! Dán vào PowerShell (Ctrl+V).' : 'Copied to clipboard! Press Ctrl+V in PowerShell.');
         setTimeout(() => {
           btn.classList.remove('copied');
           btn.innerHTML = originalHTML;
@@ -1451,6 +2112,43 @@
       } catch (err) {
         console.error('Copy failed', err);
       }
+    }
+
+    // Copy Bank Info Handler
+    async function copyBankInfo(text, btn, label) {
+      try {
+        await navigator.clipboard.writeText(text);
+        const originalHTML = btn.innerHTML;
+        const copiedWord = currentLang === 'vi' ? 'Đã chép!' : 'Copied!';
+        btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> <span>${copiedWord}</span>`;
+        showToast(currentLang === 'vi' ? `Đã sao chép ${label}: ${text}` : `Copied ${label}: ${text}`);
+        setTimeout(() => {
+          btn.innerHTML = originalHTML;
+        }, 2000);
+      } catch (err) {
+        console.error('Copy failed', err);
+      }
+    }
+
+    // Donate Preset Amount Switcher
+    function setDonateAmount(amount, btnEl) {
+      document.querySelectorAll('.donate-presets .preset-btn').forEach(b => b.classList.remove('active'));
+      if (btnEl) btnEl.classList.add('active');
+
+      const qrImg = document.getElementById('donateQrImg');
+      if (!qrImg) return;
+
+      const base = 'https://api.vietqr.io/image/970422-0941813157-compact2.png';
+      if (amount > 0) {
+        qrImg.src = `${base}?amount=${amount}&addInfo=BootReport%20Donate&accountName=NGUYEN%20QUOC%20ANH`;
+      } else {
+        qrImg.src = `${base}?addInfo=BootReport%20Donate&accountName=NGUYEN%20QUOC%20ANH`;
+      }
+
+      const msg = amount > 0 
+        ? (currentLang === 'vi' ? `Đã chọn mức ủng hộ: ${amount.toLocaleString('vi-VN')}đ` : `Selected amount: ${amount.toLocaleString()} VND`)
+        : (currentLang === 'vi' ? 'Đã chuyển sang mức ủng hộ tùy tâm' : 'Switched to custom amount');
+      showToast(msg);
     }
 
     // Live Terminal Simulation Runner
@@ -1476,16 +2174,29 @@
 
       await new Promise(r => setTimeout(r, 300));
 
-      const logs = [
-        '<div class="log-line log-muted mt-2">[i] Dang thu thap thong tin pin, o dia, RAM, su kien he thong...</div>',
-        '<div class="log-line">[+] Da quet thanh cong 18 lan khoi dong trong 60 ngay qua</div>',
-        '<div class="log-line">[+] Boot Time TB: <span class="log-green">14.8 giay</span> (BIOS: 3.2s, Kernel: 2.1s, Drivers: 4.5s)</div>',
-        '<div class="log-line">[+] Pin: Dung luong <span class="log-green">52.400 / 56.000 mWh</span> (Chai 6.4%, 142 chu ky)</div>',
-        '<div class="log-line">[+] SSD: Samsung 980 Pro 1TB (Health: <span class="log-green">Good</span>, Do mon: 3%, Nhiet do: 42°C)</div>',
-        '<div class="log-line">[+] Su kien loi: <span class="log-green">0</span> lan sap nguon (Kernel-Power 41), <span class="log-green">0</span> loi BSOD</div>',
-        '<div class="log-line log-green mt-2">[✓] Da xuat bao cao: C:\\Users\\ACER\\Desktop\\BootReport.html</div>',
-        '<div class="log-line log-muted">[i] Dang tu dong mo bao cao tren trinh duyet mac dinh...</div>'
+      const logsVi = [
+        '<div class="log-line log-muted mt-2">[i] Đang thu thập thông tin pin, ổ đĩa, RAM, sự kiện hệ thống...</div>',
+        '<div class="log-line">[+] Đã quét thành công 18 lần khởi động trong 60 ngày qua</div>',
+        '<div class="log-line">[+] Boot Time TB: <span class="log-green">14.8 giây</span> (BIOS: 3.2s, Kernel: 2.1s, Drivers: 4.5s)</div>',
+        '<div class="log-line">[+] Pin: Dung lượng <span class="log-green">52.400 / 56.000 mWh</span> (Chai 6.4%, 142 chu kỳ)</div>',
+        '<div class="log-line">[+] SSD: Samsung 980 Pro 1TB (Health: <span class="log-green">Good</span>, Độ mòn: 3%, Nhiệt độ: 42°C)</div>',
+        '<div class="log-line">[+] Sự kiện lỗi: <span class="log-green">0</span> lần sập nguồn (Kernel-Power 41), <span class="log-green">0</span> lỗi BSOD</div>',
+        '<div class="log-line log-green mt-2">[✓] Đã xuất báo cáo: C:\\Users\\ACER\\Desktop\\BootReport.html</div>',
+        '<div class="log-line log-muted">[i] Đang tự động mở báo cáo trên trình duyệt mặc định...</div>'
       ];
+
+      const logsEn = [
+        '<div class="log-line log-muted mt-2">[i] Collecting battery, disk, RAM and system event telemetry...</div>',
+        '<div class="log-line">[+] Successfully scanned 18 boot events over the past 60 days</div>',
+        '<div class="log-line">[+] Avg Boot Time: <span class="log-green">14.8 seconds</span> (BIOS: 3.2s, Kernel: 2.1s, Drivers: 4.5s)</div>',
+        '<div class="log-line">[+] Battery: Capacity <span class="log-green">52,400 / 56,000 mWh</span> (Wear 6.4%, 142 cycles)</div>',
+        '<div class="log-line">[+] SSD: Samsung 980 Pro 1TB (Health: <span class="log-green">Good</span>, Wear: 3%, Temp: 42°C)</div>',
+        '<div class="log-line">[+] Crash events: <span class="log-green">0</span> sudden reboots (Kernel-Power 41), <span class="log-green">0</span> BSOD errors</div>',
+        '<div class="log-line log-green mt-2">[✓] Report saved: C:\\Users\\ACER\\Desktop\\BootReport.html</div>',
+        '<div class="log-line log-muted">[i] Automatically launching report in default browser...</div>'
+      ];
+
+      const logs = currentLang === 'vi' ? logsVi : logsEn;
 
       for (const lineHTML of logs) {
         const temp = document.createElement('div');
@@ -1496,7 +2207,7 @@
         await new Promise(r => setTimeout(r, 260));
       }
 
-      showToast('Simulation complete! BootReport.html generated.');
+      showToast(currentLang === 'vi' ? 'Mô phỏng hoàn tất! File BootReport.html đã tạo.' : 'Simulation complete! BootReport.html generated.');
       btn.style.opacity = '1';
       btn.style.pointerEvents = 'auto';
       isSimulating = false;
@@ -1532,7 +2243,6 @@
     /* Đồng bộ cả Left Sidebar và Right TOC khi cuộn trang hoặc bấm link */
     /* ================================================================ */
 
-    // Danh sách các mốc định vị trên trang đồng bộ chuẩn xác ID
     const spySections = [
       { id: 'check-health', sidebarId: 'sb-check-health', tocId: 'toc-launch-methods' },
       { id: 'launch-methods', sidebarId: 'sb-check-health', tocId: 'toc-launch-methods' },
@@ -1543,6 +2253,7 @@
       { id: 'system-crashes', sidebarId: 'sb-system-crashes', tocId: 'toc-system-crashes' },
       { id: 'diagnostics-summary', sidebarId: 'sb-summary', tocId: 'toc-summary' },
       { id: 'terminal-preview', sidebarId: 'sb-terminal', tocId: 'toc-terminal' },
+      { id: 'donate', sidebarId: 'sb-donate', tocId: 'toc-donate' },
       { id: 'latest-release', sidebarId: 'sb-release', tocId: 'toc-release' }
     ];
 
