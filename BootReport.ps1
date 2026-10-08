@@ -234,8 +234,25 @@ $events = [pscustomobject]@{
     bugchecks          = Count-Ev @{ LogName = 'System'; ProviderName = 'Microsoft-Windows-WER-SystemErrorReporting'; Id = 1001; StartTime = $since }
 }
 
+# -- Nguon dien / Power source (AC mains vs battery) --
+$acOnline = $null
+try {
+    $bsw = Get-CimInstance -Namespace root\wmi -ClassName BatteryStatus -ErrorAction Stop | Select-Object -First 1
+    if ($null -ne $bsw) { $acOnline = [bool]$bsw.PowerOnline }
+} catch {}
+if (-not $wb -and $design -le 0) {
+    $powerSource = 'ac-desktop'          # khong co pin -> may ban / server chay dien truc tiep
+} elseif ($null -ne $acOnline) {
+    $powerSource = if ($acOnline) { 'ac' } else { 'battery' }
+} elseif ($battery -and $null -ne $battery.status) {
+    $powerSource = if ([int]$battery.status -eq 1) { 'battery' } else { 'ac' }
+} else {
+    $powerSource = $null
+}
+
 $health = [pscustomobject]@{
     battery = $battery
+    power   = $powerSource
     disks   = $disks
     volumes = $vols
     system  = $sys
@@ -383,7 +400,8 @@ vi:{
  cName:"Tên", cCount:"Số lần", cAvg:"Thời gian TB", cMax:"Lâu nhất", cExtra:"Chậm thêm TB",
  cTime:"Thời điểm", cTotal:"Tổng", cMain:"Tới desktop", cPost:"Sau boot", cKernel:"Kernel", cDriver:"Driver", cDevices:"Thiết bị", cProfile:"Profile", cLevel:"Mức",
  lvOk:"Tốt", lvWarn:"Cần theo dõi", lvBad:"Có vấn đề",
- noBattery:"Không tìm thấy pin. Có thể đây là máy bàn, hoặc pin không báo cáo được.",
+ noBattery:"Không tìm thấy pin — máy đang dùng nguồn điện trực tiếp (máy bàn/PC), hoặc pin không báo cáo được.",
+ ckPower:"Nguồn điện", pwAc:"Đang cắm điện (AC)", pwBattery:"Đang chạy bằng pin", pwDesktop:"Nguồn điện trực tiếp (máy bàn, không có pin)",
  bMsgNone:"Không đọc được dung lượng thiết kế nên chưa tính được độ chai pin.",
  bMsgOk:"Pin còn tốt, giữ được phần lớn dung lượng ban đầu.",
  bMsgWarn:"Pin đã chai ở mức trung bình, thời lượng dùng giảm rõ rệt.",
@@ -435,7 +453,8 @@ en:{
  cName:"Name", cCount:"Count", cAvg:"Avg time", cMax:"Longest", cExtra:"Avg extra delay",
  cTime:"Time", cTotal:"Total", cMain:"To desktop", cPost:"After boot", cKernel:"Kernel", cDriver:"Driver", cDevices:"Devices", cProfile:"Profile", cLevel:"Level",
  lvOk:"Good", lvWarn:"Watch", lvBad:"Problem",
- noBattery:"No battery found. This may be a desktop PC, or the battery cannot report.",
+ noBattery:"No battery — this machine runs on direct AC power (desktop/PC), or the battery cannot report.",
+ ckPower:"Power source", pwAc:"On AC power (plugged in)", pwBattery:"On battery", pwDesktop:"Direct AC power (desktop, no battery)",
  bMsgNone:"Design capacity unavailable, so battery wear can't be calculated.",
  bMsgOk:"Battery is in good shape and keeps most of its original capacity.",
  bMsgWarn:"Battery has moderate wear; runtime is noticeably reduced.",
@@ -545,6 +564,8 @@ const bsLabel = c => (c in {1:1,2:1,3:1,4:1,5:1,6:1,11:1}) ? t("bs"+c) : (c>=7&&
 (function(){
   const checks = [];
   const add = (name, value, s, note) => checks.push({name, value, s, note});
+  const pw = H.power;
+  if(pw) add(t("ckPower"), t(pw==="battery"?"pwBattery":pw==="ac-desktop"?"pwDesktop":"pwAc"), "ok", "");
   const b = H.battery;
   if(b && b.percent!=null) add(t("ckBattery"), t("ckBatteryVal", b.percent), b.percent>=80?"ok":b.percent>=60?"warn":"bad", "");
   if(b && b.cycles>0) add(t("ckCycles"), t("ckCyclesVal", b.cycles), b.cycles>=1000?"bad":b.cycles>=500?"warn":"ok", t("ckCyclesNote"));
