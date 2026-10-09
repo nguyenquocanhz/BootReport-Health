@@ -32,6 +32,8 @@ BR_JSON=0
 BR_COLOR=auto
 BR_QUICK=0
 BR_NET=0
+BR_COMPARE=1
+BR_STATE=
 BR_EXITCODE=0
 BR_PLATFORM=
 BR_OS_LABEL=
@@ -67,6 +69,7 @@ Usage: sh BootReport.sh [options]
                       the network, and it contacts a public speed-test endpoint.
   --json              Print the report data as JSON on stdout instead of the summary
   --quick             Skip the slower checks (package updates, SMART, long log scans)
+  --no-compare        Do not compare against, or save, a previous-run snapshot
   --no-color          Plain terminal output
   --exit-code         Exit 1 if something needs watching, 2 if a problem was found
   -h, --help          Show this help
@@ -141,6 +144,20 @@ read_file() {
     _rf=
     if [ -r "$1" ]; then IFS= read -r _rf <"$1" 2>/dev/null || :; fi
     printf '%s' "$_rf"
+}
+
+# sev_rank STATUS -> 0 ok, 1 info, 2 warn, 3 bad (for ordering run-to-run changes worst-first)
+sev_rank() { case "$1" in bad) printf 3 ;; warn) printf 2 ;; info) printf 1 ;; *) printf 0 ;; esac; }
+
+# fmt_elapsed SECONDS -> "13d 2h" / "5h 12m" / "8m" (language-neutral d/h/m)
+fmt_elapsed() {
+    awk -v s="$1" 'BEGIN {
+        s = int(s + 0); if (s < 0) s = 0
+        d = int(s / 86400); h = int((s % 86400) / 3600); mm = int((s % 3600) / 60)
+        if (d > 0) printf "%dd %dh", d, h
+        else if (h > 0) printf "%dh %dm", h, mm
+        else printf "%dm", mm
+    }'
 }
 
 # ---------- Gioi han thoi gian / Timeouts ----------
@@ -394,6 +411,7 @@ collect_linux() {
     lx_security
     lx_network
     lx_limits
+    lx_inventory
     if [ "$BR_ROOT" != 1 ]; then
         add_verdict "$(t 'Not running as root: SMART, some logs and firewall details may be missing. Re-run with sudo for the full picture.' 'Đang chạy không có quyền root: có thể thiếu SMART, một số log và chi tiết firewall. Chạy lại bằng sudo để có báo cáo đầy đủ.')"
     fi
@@ -1277,6 +1295,111 @@ lxs_iferrors() {
             "$(tf '%s errors / %s packets' '%s lỗi / %s gói' "$_lxif_e" "$_lxif_p")" warn \
             "$(t 'This network interface shows a high error rate; check the cable, port or virtual NIC driver.' 'Giao tiếp mạng này có tỉ lệ lỗi cao; kiểm tra cáp, cổng hoặc trình điều khiển NIC ảo.')"
     done <"$BR_TMP/lxif"
+    return 0
+}
+
+# ---------- Kiem ke dich vu & phien ban / Service & software inventory ----------
+# Read-only: lists running Docker containers and the versions of common server software, and flags a
+# few clearly end-of-life runtimes. EOL cutoffs are a small embedded table, current as of 2026-10;
+# they are graded "warn" (never "bad") and only for versions that are unambiguously past end-of-life.
+lx_inventory() {
+    lxs_docker
+    # The ~14 version probes spawn a subprocess each; skip them under --quick (Docker stays, it is fast).
+    [ "$BR_QUICK" = 1 ] || lxs_software
+    return 0
+}
+
+lxs_docker() {
+    have docker || return 0
+    run_to 6 docker ps --no-trunc --format '{{.Names}}|{{.Image}}|{{.Status}}' >"$BR_TMP/lxdocker" 2>/dev/null
+    if [ ! -s "$BR_TMP/lxdocker" ]; then
+        # Either no containers, or the socket is not accessible to this user.
+        if [ "$BR_ROOT" != 1 ] && ! run_to 4 docker info >/dev/null 2>&1; then
+            add_check apps "Docker" "$(t 'installed but not accessible (add your user to the docker group or use sudo)' 'đã cài nhưng không truy cập được (thêm user vào nhóm docker hoặc dùng sudo)')" info
+        fi
+        return 0
+    fi
+    _lxd_n=$(wc -l <"$BR_TMP/lxdocker")
+    _lxd_bad=0
+    _lxd_i=0
+    table_new containers "$(t 'Running containers' 'Container đang chạy')" "$(t 'Name' 'Tên')|$(t 'Image' 'Image')|$(t 'Status' 'Trạng thái')"
+    while IFS='|' read -r _lxd_name _lxd_img _lxd_stat; do
+        [ -n "$_lxd_name" ] || continue
+        _lxd_i=$((_lxd_i + 1))
+        [ "$_lxd_i" -le 50 ] && table_row containers "$_lxd_name" "$_lxd_img" "$_lxd_stat"
+        case "$_lxd_stat" in *unhealthy* | Restarting*) _lxd_bad=$((_lxd_bad + 1)) ;; esac
+    done <"$BR_TMP/lxdocker"
+    if [ "$_lxd_bad" -gt 0 ]; then
+        add_check apps "$(t 'Docker containers' 'Container Docker')" \
+            "$(tf '%s running, %s unhealthy/restarting' '%s đang chạy, %s lỗi/khởi động lại liên tục' "$_lxd_n" "$_lxd_bad")" warn \
+            "$(t 'Some containers are unhealthy or stuck restarting; check them with docker ps and docker logs NAME.' 'Có container không khỏe hoặc kẹt khởi động lại; kiểm tra bằng docker ps và docker logs TÊN.')"
+    else
+        add_check apps "$(t 'Docker containers' 'Container Docker')" \
+            "$(tf '%s running, all healthy' '%s đang chạy, đều ổn' "$_lxd_n")" ok
+    fi
+}
+
+# lxs_semver STRING -> first N.N or N.N.N found, else empty (POSIX ERE, no {n,m} interval)
+lxs_semver() {
+    printf '%s' "$1" | LC_ALL=C awk 'match($0, /[0-9]+\.[0-9]+(\.[0-9]+)?/) { print substr($0, RSTART, RLENGTH); exit }'
+}
+
+lxs_eolwarn() {
+    add_check apps "$(tf '%s (end-of-life)' '%s (hết hỗ trợ)' "$1")" "$2" warn "$3"
+}
+
+# lxs_probe LABEL BIN "VERSION COMMAND" [EOLKEY]
+lxs_probe() {
+    have "$2" || return 0
+    # "exec" so sh is replaced by the probe (no grandchild to outlive run_to's watchdog); merge stderr
+    # because ssh/nginx/java print their version there; bound it so a weird binary cannot hang the report.
+    _lxp_v=$(lxs_semver "$(run_to 3 sh -c "exec $3 2>&1")")
+    [ -n "$_lxp_v" ] || return 0
+    table_row software "$1" "$_lxp_v"
+    [ -n "${4:-}" ] || return 0
+    _lxp_maj=${_lxp_v%%.*}
+    _lxp_rest=${_lxp_v#*.}
+    _lxp_min=${_lxp_rest%%.*}
+    is_int "$_lxp_maj" || return 0
+    is_int "$_lxp_min" || _lxp_min=0
+    case "$4" in
+        openssl) [ "$_lxp_maj" -gt 0 ] && [ "$_lxp_maj" -lt 3 ] && lxs_eolwarn "$1" "$_lxp_v" "$(t 'OpenSSL 1.x reached end-of-life; move to the 3.x series.' 'OpenSSL 1.x đã hết hỗ trợ; chuyển lên dòng 3.x.')" ;;
+        python)
+            if [ "$_lxp_maj" -gt 0 ] && [ "$_lxp_maj" -lt 3 ]; then
+                lxs_eolwarn "$1" "$_lxp_v" "$(t 'Python 2 is end-of-life.' 'Python 2 đã hết hỗ trợ.')"
+            elif [ "$_lxp_maj" -eq 3 ] && [ "$_lxp_min" -lt 9 ]; then
+                lxs_eolwarn "$1" "$_lxp_v" "$(t 'This Python 3 version is end-of-life; upgrade to 3.9 or newer.' 'Bản Python 3 này đã hết hỗ trợ; nâng lên 3.9 trở lên.')"
+            fi
+            ;;
+        node) [ "$_lxp_maj" -gt 0 ] && [ "$_lxp_maj" -lt 18 ] && lxs_eolwarn "$1" "$_lxp_v" "$(t 'This Node.js version is end-of-life; upgrade to an active LTS release.' 'Bản Node.js này đã hết hỗ trợ; nâng lên bản LTS còn hỗ trợ.')" ;;
+        php)
+            if [ "$_lxp_maj" -gt 0 ] && [ "$_lxp_maj" -lt 8 ]; then
+                lxs_eolwarn "$1" "$_lxp_v" "$(t 'PHP 7 and older are end-of-life.' 'PHP 7 trở xuống đã hết hỗ trợ.')"
+            elif [ "$_lxp_maj" -eq 8 ] && [ "$_lxp_min" -lt 1 ]; then
+                lxs_eolwarn "$1" "$_lxp_v" "$(t 'PHP 8.0 is end-of-life; upgrade to 8.1 or newer.' 'PHP 8.0 đã hết hỗ trợ; nâng lên 8.1 trở lên.')"
+            fi
+            ;;
+        postgres) [ "$_lxp_maj" -gt 0 ] && [ "$_lxp_maj" -lt 13 ] && lxs_eolwarn "$1" "$_lxp_v" "$(t 'This PostgreSQL major version is end-of-life.' 'Phiên bản chính PostgreSQL này đã hết hỗ trợ.')" ;;
+    esac
+}
+
+lxs_software() {
+    table_new software "$(t 'Detected software' 'Phần mềm phát hiện')" "$(t 'Software' 'Phần mềm')|$(t 'Version' 'Phiên bản')" \
+        "$(t 'Versions of common server software found on this host (client/binary version).' 'Phiên bản các phần mềm máy chủ phổ biến tìm thấy trên máy (phiên bản client/binary).')"
+    lxs_probe "OpenSSH" ssh "ssh -V"
+    lxs_probe "OpenSSL" openssl "openssl version" openssl
+    lxs_probe "Python" python3 "python3 -V" python
+    lxs_probe "Node.js" node "node -v" node
+    lxs_probe "PHP" php "php -v" php
+    lxs_probe "PostgreSQL" psql "psql --version" postgres
+    lxs_probe "MariaDB/MySQL" mysql "mysql --version"
+    lxs_probe "nginx" nginx "nginx -v"
+    lxs_probe "Apache" apache2 "apache2 -v"
+    lxs_probe "Apache" httpd "httpd -v"
+    lxs_probe "Redis" redis-server "redis-server --version"
+    lxs_probe "Docker" docker "docker --version"
+    lxs_probe "Java" java "java -version"
+    lxs_probe "Go" go "go version"
     return 0
 }
 
@@ -4203,6 +4326,7 @@ parse_args() {
             --json) BR_JSON=1 ;;
             --quick) BR_QUICK=1 ;;
             --net | --speedtest) BR_NET=1 ;;
+            --no-compare) BR_COMPARE=0 ;;
             --no-color) BR_COLOR=never ;;
             --exit-code) BR_EXITCODE=1 ;;
             -h | --help)
@@ -4260,6 +4384,75 @@ make_tmp() {
     trap 'exit 143' TERM HUP
 }
 
+# ---------- So sanh voi lan chay truoc / Run-to-run comparison ----------
+# A small per-host, per-language snapshot of the check statuses is kept so the next run can show what
+# changed. It is BootReport's own data (not system state); if nowhere is writable the feature just
+# turns itself off. Per-language because the check names shown in the snapshot are localized.
+init_state() {
+    [ "$BR_COMPARE" = 1 ] || return 0
+    _is_h=$(printf '%s' "${BR_HOST:-host}" | LC_ALL=C tr -c 'A-Za-z0-9._-' '_')
+    for _is_dir in "${XDG_STATE_HOME:-$HOME/.local/state}/bootreport" "$HOME/.bootreport" "${TMPDIR:-/tmp}/bootreport-state"; do
+        mkdir -p "$_is_dir" 2>/dev/null
+        if [ -d "$_is_dir" ] && [ -w "$_is_dir" ]; then
+            BR_STATE="$_is_dir/state-${_is_h}-${BR_LANG}.tsv"
+            return 0
+        fi
+    done
+    BR_COMPARE=0
+}
+
+# compare_state: diff the current checks against the saved snapshot and add a few "what changed" lines.
+compare_state() {
+    [ "$BR_COMPARE" = 1 ] || return 0
+    [ -n "$BR_STATE" ] && [ -r "$BR_STATE" ] || return 0
+    LC_ALL=C awk -F "$TAB" '
+        FNR == NR { if ($1 == "C") { k = $2 SUBSEP $4; ps[k] = $3; pn[k] = $4 } else if ($1 == "#ts") pt = $2; next }
+        $1 == "C" {
+            k = $2 SUBSEP $4; cur[k] = 1
+            if (k in ps) { if (ps[k] != $3) print "chg\t" $4 "\t" ps[k] "\t" $3 }
+            else if ($3 == "warn" || $3 == "bad") print "new\t" $4 "\t" $3
+        }
+        END {
+            for (k in ps) if (!(k in cur) && (ps[k] == "warn" || ps[k] == "bad")) print "gone\t" pn[k] "\t" ps[k] "\t"
+            print "ts\t" pt "\t\t"
+        }
+    ' "$BR_STATE" "$BR_MODEL" >"$BR_TMP/deltas" 2>/dev/null
+
+    _cs_age=
+    : >"$BR_TMP/dl"
+    while IFS="$TAB" read -r _cs_k _cs_a _cs_b _cs_c; do
+        case "$_cs_k" in
+            ts) if [ -n "$_cs_a" ] && is_int "$_cs_a"; then _cs_age=$(fmt_elapsed "$((BR_NOW - _cs_a))"); fi ;;
+            chg)
+                if [ "$(sev_rank "$_cs_c")" -gt "$(sev_rank "$_cs_b")" ]; then _cs_r=0; else _cs_r=2; fi
+                printf '%s\t%s\n' "$_cs_r" "$(tf '%s: %s -> %s' '%s: %s -> %s' "$_cs_a" "$_cs_b" "$_cs_c")" >>"$BR_TMP/dl"
+                ;;
+            new) printf '1\t%s\n' "$(tf 'new: %s (%s)' 'mới: %s (%s)' "$_cs_a" "$_cs_b")" >>"$BR_TMP/dl" ;;
+            gone) printf '2\t%s\n' "$(tf 'resolved: %s (was %s)' 'đã hết: %s (trước là %s)' "$_cs_a" "$_cs_b")" >>"$BR_TMP/dl" ;;
+        esac
+    done <"$BR_TMP/deltas"
+
+    [ -s "$BR_TMP/dl" ] || return 0
+    _cs_head=$(t 'Changes since last run' 'Thay đổi so với lần chạy trước')
+    [ -n "$_cs_age" ] && _cs_head="$_cs_head ($_cs_age)"
+    add_verdict "$_cs_head:"
+    _cs_tot=$(wc -l <"$BR_TMP/dl")
+    LC_ALL=C sort -n "$BR_TMP/dl" | head -n 8 | while IFS="$TAB" read -r _cs_rank _cs_txt; do
+        add_verdict "  • $_cs_txt"
+    done
+    if [ "$_cs_tot" -gt 8 ]; then add_verdict "$(tf '  ...and %s more change(s)' '  ...và %s thay đổi nữa' "$((_cs_tot - 8))")"; fi
+}
+
+# save_state: write the current checks (plus a timestamp) as the baseline for the next run.
+save_state() {
+    { [ "$BR_COMPARE" = 1 ] && [ -n "$BR_STATE" ]; } || return 0
+    _ss_tmp="$BR_STATE.$$.tmp"
+    if { printf '#ts\t%s\n' "$BR_NOW"; awk -F "$TAB" '$1 == "C"' "$BR_MODEL"; } >"$_ss_tmp" 2>/dev/null; then
+        mv "$_ss_tmp" "$BR_STATE" 2>/dev/null || rm -f "$_ss_tmp" 2>/dev/null
+    fi
+    return 0
+}
+
 main() {
     parse_args "$@"
     detect_platform
@@ -4271,6 +4464,7 @@ main() {
     BR_HOST=$(hostname 2>/dev/null) || BR_HOST=
     [ -n "$BR_HOST" ] || BR_HOST=$(uname -n 2>/dev/null)
 
+    init_state
     say "$(t 'BootReport: collecting system health data...' 'BootReport: đang thu thập thông tin sức khỏe hệ thống...')"
     init_model
     case "$BR_PLATFORM" in
@@ -4282,6 +4476,7 @@ main() {
         say "$(t 'Running the network test (--net)...' 'Đang chạy kiểm tra mạng (--net)...')"
         net_collect
     fi
+    compare_state
     finish_model
 
     if [ "$BR_JSON" = 1 ]; then render_json; else render_terminal; fi
@@ -4299,6 +4494,8 @@ main() {
             say "$(t 'Could not write the HTML report to' 'Không ghi được báo cáo HTML vào'): $BR_OUT"
         fi
     fi
+
+    save_state
 
     if [ "$BR_EXITCODE" = 1 ]; then
         if [ "$BR_N_BAD" -gt 0 ]; then exit 2; fi

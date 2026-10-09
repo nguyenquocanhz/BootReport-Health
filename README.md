@@ -81,6 +81,7 @@ Script tự nhận diện hệ điều hành, in tóm tắt ngay trên terminal 
 | `--out FILE` | Nơi lưu báo cáo HTML |
 | `--net` | Bật đo mạng (ping, mất gói, tốc độ tải) — **mặc định TẮT**, là thứ duy nhất gọi mạng |
 | `--quick` | Bỏ qua các mục chậm (cập nhật gói, SMART) |
+| `--no-compare` | Không so sánh / lưu snapshot của lần chạy trước (tắt phần "thay đổi so với lần trước") |
 | `--no-html` / `--no-open` | Chỉ in terminal / không tự mở báo cáo |
 | `--json` | In dữ liệu JSON thay cho bản tóm tắt |
 
@@ -92,7 +93,8 @@ curl -fsSL https://raw.githubusercontent.com/nguyenquocanhz/BootReport-Health/ma
 
 ### 🔎 Kiểm tra những gì
 
-- **Linux (VPS / server / desktop):** thời gian boot (systemd), tải CPU · CPU steal · iowait, RAM/swap, dung lượng & inode ổ đĩa, SMART, software RAID, **nguồn điện (AC/pin)**, nhiệt độ, dịch vụ lỗi, sự cố kernel/OOM/lỗi I/O & ổ đĩa, cập nhật đang chờ & hệ điều hành hết hỗ trợ (EOL), cấu hình SSH/firewall/SELinux, và **rà các cổng mạng rủi ro / dấu hiệu cửa hậu đang lắng nghe ngay trên máy** (Telnet, RAT/backdoor, dịch vụ phơi ra `0.0.0.0`…).
+- **Linux (VPS / server / desktop):** thời gian boot (systemd), tải CPU · CPU steal · iowait, RAM/swap, dung lượng & inode ổ đĩa, SMART, software RAID, **nguồn điện (AC/pin)**, nhiệt độ, dịch vụ lỗi, sự cố kernel/OOM/lỗi I/O & ổ đĩa, cập nhật đang chờ & hệ điều hành hết hỗ trợ (EOL), cấu hình SSH/firewall/SELinux, **rà các cổng mạng rủi ro / dấu hiệu cửa hậu đang lắng nghe ngay trên máy** (Telnet, RAT/backdoor, dịch vụ phơi ra `0.0.0.0`…), và **kiểm kê container Docker + phiên bản phần mềm máy chủ** (cảnh báo bản đã hết hỗ trợ).
+- **Theo dõi xu hướng:** mỗi lần chạy lưu một snapshot nhỏ và lần sau hiển thị **"thay đổi so với lần chạy trước"** (mục nào xấu đi / cải thiện / mới xuất hiện) — hợp để chạy định kỳ bằng cron trên server. Tắt bằng `--no-compare`.
 - **macOS (Intel & Apple Silicon):** độ chai pin & chu kỳ, nguồn điện, SMART ổ đĩa, memory pressure, kernel panic, SIP/FileVault/Gatekeeper/firewall, cập nhật đang chờ, startup items.
 - **Android (Termux, không cần root):** pin (mức / health / nhiệt độ / ước lượng chai), lưu trữ, RAM, **mức vá bảo mật (security patch)**, verified boot / bootloader / mã hoá, ADB qua mạng, gói Termux cần cập nhật.
 
